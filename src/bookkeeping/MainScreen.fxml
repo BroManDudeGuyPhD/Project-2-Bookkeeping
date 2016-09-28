@@ -8,7 +8,7 @@
 <AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bookkeeping.FXMLDocumentController">
     <children>
         <Label fx:id="label" layoutX="126" layoutY="120" minHeight="16" minWidth="69" />
-      <Button layoutX="235.0" layoutY="247.0" mnemonicParsing="false" text="Button" />
-      <CheckBox layoutX="356.0" layoutY="251.0" mnemonicParsing="false" text="CheckBox" />
+      <Button layoutX="14.0" layoutY="37.0" mnemonicParsing="false" onAction="#handleButtonAction" text="Button" />
+      <CheckBox layoutX="92.0" layoutY="41.0" mnemonicParsing="false" text="CheckBox" />
     </children>
 </AnchorPane>
