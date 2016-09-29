@@ -14,6 +14,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -23,6 +24,8 @@ import javafx.util.Duration;
  * @author AndrewFossier
  */
 public class MainScreenController implements Initializable {
+
+    static EventHandler<ActionEvent> handleButtonAction;
     
     boolean timerOn = false;
     boolean timerPaused = true;
@@ -33,17 +36,19 @@ public class MainScreenController implements Initializable {
     javafx.animation.Timeline timer = null;
     
     @FXML
-    private Label label;
-    @FXML
     private Button button;
     @FXML
     private Label timerLabel;
     @FXML 
     private Button startButton;
+    @FXML
+    private CheckBox Problem1;
+    @FXML
+    private Label teamNumber;
     
     
     @FXML
-    private void handleButtonAction(ActionEvent event) {
+    public void handleButtonAction(ActionEvent event) {
 
         if (!timerOn) {
             
@@ -51,15 +56,16 @@ public class MainScreenController implements Initializable {
             timerOn = true;
             timerPaused = false;
             button.setText("Pause");
+            startButton.setText("Pause All");
             timerLabel.setTextFill(Color.GREEN);
 
         } else if (timerPaused) {
 
             timer.play();
             timerPaused = false;
-             timerLabel.setTextFill(Color.GREEN);
+            timerLabel.setTextFill(Color.GREEN);
             button.setText("Pause");
-            
+            startButton.setText("Pause All");
         } else if (!timerPaused) {
             
             timer.pause();
@@ -70,9 +76,38 @@ public class MainScreenController implements Initializable {
         
     }
     
+    @FXML
+    public void handleStartButton(ActionEvent event){
+        
+        if (!timerOn) {
+            
+            timer.play(); // Start timer
+            timerOn = true;
+            timerPaused = false;
+            button.setText("Pause");
+            startButton.setText("Pause All");
+            timerLabel.setTextFill(Color.GREEN);
+
+        } 
+        
+        else if (!timerPaused) {
+            
+            timer.pause();
+            timerPaused = true;
+            button.setText("Resume");
+            startButton.setText("Resume All");
+            timerLabel.setTextFill(Color.RED);
+        }
+        
+    }
+    
+    
+
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+System.out.println("Initialized!");
+        
             eventHandler = e -> {
                 seconds++;
                 if (seconds == 60) {
