@@ -26,36 +26,37 @@ import javafx.util.Duration;
  */
 public class MainScreenController implements Initializable {
 
+    boolean timerOn = false;
+    boolean timerPaused = true;
+    int seconds = 0;
+    int minutes = 0;
+    int teamsAmount = 20;
+    
+    Label[] teamTimers = new Label[teamsAmount];
+    Label[] teamNames = new Label[teamsAmount];
+    Button[] buttons = new Button[teamsAmount];
 
-    
-    static boolean timerOn = false;
-    static boolean timerPaused = true;
-    static int seconds = 0;
-    static int minutes = 0;
-    
     EventHandler<ActionEvent> eventHandler = null;
-    static javafx.animation.Timeline timer = null;
-    
+    javafx.animation.Timeline timer = null;
+
     @FXML
-    private static Button button;
+    private Button button;
     @FXML
-    private static Label timerLabel;
-    @FXML 
-    private static Button startButton;
+    private Label timerLabel;
     @FXML
-    private static CheckBox Problem1;
+    private Button startButton;
     @FXML
-    private static Label teamNumber;
-   
-    
-    
+    private CheckBox Problem1;
     @FXML
-    public static void handleButtonAction(ActionEvent event) {
+    private Label teamNumber;
+
+    @FXML
+    public void handleButtonAction(ActionEvent event) {
 
         System.out.println("YAY");
-        
+
         if (!timerOn) {
-            
+
             timer.play(); // Start timer
             timerOn = true;
             timerPaused = false;
@@ -71,20 +72,20 @@ public class MainScreenController implements Initializable {
             button.setText("Pause");
             startButton.setText("Pause All");
         } else if (!timerPaused) {
-            
+
             timer.pause();
             timerPaused = true;
             button.setText("Resume");
             timerLabel.setTextFill(Color.RED);
         }
-        
+
     }
-    
+
     @FXML
-    public static void handleStartButton(ActionEvent event){
-        
+    public void handleStartButton(ActionEvent event) {
+
         if (!timerOn) {
-            
+
             timer.play(); // Start timer
             timerOn = true;
             timerPaused = false;
@@ -92,95 +93,72 @@ public class MainScreenController implements Initializable {
             startButton.setText("Pause All");
             timerLabel.setTextFill(Color.GREEN);
 
-        } 
-        
-        else if (!timerPaused) {
-            
+        } else if (!timerPaused) {
+
             timer.pause();
             timerPaused = true;
             button.setText("Resume");
             startButton.setText("Resume All");
             timerLabel.setTextFill(Color.RED);
         }
-        
+
     }
-    
-    
-    
-        public static void generateButtons(int teamsAmount, Pane pane){
+
+    public void generateButtons(Pane pane) {
+
         int buttonYValue = 42;
         int labelYValue = 46;
-        Label[] teamNames = new Label[teamsAmount];
-        Button[] buttons = new Button[teamsAmount];
-        
-        for(int i = 0; i < teamsAmount; i++){
+        int timerYValue = 46;
+
+        for (int i = 0; i < teamsAmount; i++) {
             //Initialize labesl with team names
-//            teamNames[i].setText("Team "+i+1);
-//            teamNames[i].setLayoutX(14);
-//            teamNames[i].setLayoutY(labelYValue);
+            teamNames[i] = new Label();
+            teamNames[i].setText("Team " + i);
+            teamNames[i].setLayoutX(14);
+            teamNames[i].setLayoutY(labelYValue);
+
+            //Initialize team timers
+            teamTimers[i] = new Label();
+            teamTimers[i].setText("00:00");
+            teamTimers[i].setLayoutX(206);
+            teamTimers[i].setLayoutY(timerYValue);
+            //206 46
 
             //Initialize buttons to control team timers
             buttons[i] = new Button();
-            buttons[i].setText("     ");
+            buttons[i].setText("Start All");
             buttons[i].setOnAction(handleButtonAction);
-            
-//            buttons[i].setOnAction(new EventHandler<ActionEvent>() {
-//                @Override
-//                public void handle(ActionEvent event) {
-//                    if (!timerOn) {
-//
-//                        timer.play(); // Start timer
-//                        timerOn = true;
-//                        timerPaused = false;
-//                        button.setText("Pause");
-//                        startButton.setText("Pause All");
-//                        timerLabel.setTextFill(Color.GREEN);
-//
-//                    } else if (timerPaused) {
-//
-//                        timer.play();
-//                        timerPaused = false;
-//                        timerLabel.setTextFill(Color.GREEN);
-//                        button.setText("Pause");
-//                        startButton.setText("Pause All");
-//                    } else if (!timerPaused) {
-//
-//                        timer.pause();
-//                        timerPaused = true;
-//                        button.setText("Resume");
-//                        timerLabel.setTextFill(Color.RED);
-//                    }
-//                }
-//            });
-            buttons[i].setLayoutX(170);
+
+            buttons[i].setLayoutX(98);
             buttons[i].setLayoutY(buttonYValue);
 
+            //Add Children elements for each team to the pane
             pane.getChildren().add(buttons[i]);
-
-            buttonYValue += 15;
+            pane.getChildren().add(teamNames[i]);
+            pane.getChildren().add(teamTimers[i]);
+            buttonYValue += 27;
+            labelYValue += 27;
+            timerYValue += 27;
         }
     }
-    
-    
 
-    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-System.out.println("Initialized!");
-        
-            eventHandler = e -> {
-                seconds++;
-                if (seconds == 60) {
-                    minutes++;
-                    seconds = 0;
-                }
-                timerLabel.setText(String.format("%02d:%02d", minutes, seconds));
-            };
-            
-            timer = new Timeline(
+        System.out.println("Initialized!");
+
+        eventHandler = e -> {
+            seconds++;
+            if (seconds == 60) {
+                minutes++;
+                seconds = 0;
+            }
+            timerLabel.setText(String.format("%02d:%02d", minutes, seconds));
+        };
+
+        timer = new Timeline(
                 new KeyFrame(Duration.millis(1000), eventHandler));
-            timer.setCycleCount(180);
-            
-    }      
-    
+        timer.setCycleCount(180);
+
+    }
+
 }

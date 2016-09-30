@@ -16,13 +16,14 @@ import javafx.stage.Stage;
  * @author AndrewFossier
  */
 public class Bookkeeping extends Application {
+    MainScreenController mainC = new MainScreenController();
     
     @Override
     public void start(Stage stage) throws Exception {
 
         Pane root = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
         
-        MainScreenController.generateButtons(2, root);
+        mainC.generateButtons(root);
         
         stage.setScene(new Scene(root, 1024, 768));
         stage.show();
