@@ -31,7 +31,7 @@ public class Bookkeeping extends Application {
     /**
      * @param args the command line arguments
      */
-    public void main(String[] args) {
+    public static void main(String[] args) {
         launch(args);
     }
     

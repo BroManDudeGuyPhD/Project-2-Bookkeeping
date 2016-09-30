@@ -122,34 +122,36 @@ public class MainScreenController implements Initializable {
             //Initialize buttons to control team timers
             buttons[i] = new Button();
             buttons[i].setText("     ");
-            buttons[i].setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    if (!timerOn) {
-
-                        timer.play(); // Start timer
-                        timerOn = true;
-                        timerPaused = false;
-                        button.setText("Pause");
-                        startButton.setText("Pause All");
-                        timerLabel.setTextFill(Color.GREEN);
-
-                    } else if (timerPaused) {
-
-                        timer.play();
-                        timerPaused = false;
-                        timerLabel.setTextFill(Color.GREEN);
-                        button.setText("Pause");
-                        startButton.setText("Pause All");
-                    } else if (!timerPaused) {
-
-                        timer.pause();
-                        timerPaused = true;
-                        button.setText("Resume");
-                        timerLabel.setTextFill(Color.RED);
-                    }
-                }
-            });
+            buttons[i].setOnAction(handleButtonAction);
+            
+//            buttons[i].setOnAction(new EventHandler<ActionEvent>() {
+//                @Override
+//                public void handle(ActionEvent event) {
+//                    if (!timerOn) {
+//
+//                        timer.play(); // Start timer
+//                        timerOn = true;
+//                        timerPaused = false;
+//                        button.setText("Pause");
+//                        startButton.setText("Pause All");
+//                        timerLabel.setTextFill(Color.GREEN);
+//
+//                    } else if (timerPaused) {
+//
+//                        timer.play();
+//                        timerPaused = false;
+//                        timerLabel.setTextFill(Color.GREEN);
+//                        button.setText("Pause");
+//                        startButton.setText("Pause All");
+//                    } else if (!timerPaused) {
+//
+//                        timer.pause();
+//                        timerPaused = true;
+//                        button.setText("Resume");
+//                        timerLabel.setTextFill(Color.RED);
+//                    }
+//                }
+//            });
             buttons[i].setLayoutX(170);
             buttons[i].setLayoutY(buttonYValue);
 
