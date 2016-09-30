@@ -16,6 +16,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
@@ -25,31 +26,34 @@ import javafx.util.Duration;
  */
 public class MainScreenController implements Initializable {
 
-    static EventHandler<ActionEvent> handleButtonAction;
+
     
-    boolean timerOn = false;
-    boolean timerPaused = true;
-    int seconds = 0;
-    int minutes = 0;
+    static boolean timerOn = false;
+    static boolean timerPaused = true;
+    static int seconds = 0;
+    static int minutes = 0;
     
     EventHandler<ActionEvent> eventHandler = null;
-    javafx.animation.Timeline timer = null;
+    static javafx.animation.Timeline timer = null;
     
     @FXML
-    private Button button;
+    private static Button button;
     @FXML
-    private Label timerLabel;
+    private static Label timerLabel;
     @FXML 
-    private Button startButton;
+    private static Button startButton;
     @FXML
-    private CheckBox Problem1;
+    private static CheckBox Problem1;
     @FXML
-    private Label teamNumber;
+    private static Label teamNumber;
+   
     
     
     @FXML
-    public void handleButtonAction(ActionEvent event) {
+    public static void handleButtonAction(ActionEvent event) {
 
+        System.out.println("YAY");
+        
         if (!timerOn) {
             
             timer.play(); // Start timer
@@ -77,7 +81,7 @@ public class MainScreenController implements Initializable {
     }
     
     @FXML
-    public void handleStartButton(ActionEvent event){
+    public static void handleStartButton(ActionEvent event){
         
         if (!timerOn) {
             
@@ -99,6 +103,60 @@ public class MainScreenController implements Initializable {
             timerLabel.setTextFill(Color.RED);
         }
         
+    }
+    
+    
+    
+        public static void generateButtons(int teamsAmount, Pane pane){
+        int buttonYValue = 42;
+        int labelYValue = 46;
+        Label[] teamNames = new Label[teamsAmount];
+        Button[] buttons = new Button[teamsAmount];
+        
+        for(int i = 0; i < teamsAmount; i++){
+            //Initialize labesl with team names
+//            teamNames[i].setText("Team "+i+1);
+//            teamNames[i].setLayoutX(14);
+//            teamNames[i].setLayoutY(labelYValue);
+
+            //Initialize buttons to control team timers
+            buttons[i] = new Button();
+            buttons[i].setText("     ");
+            buttons[i].setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    if (!timerOn) {
+
+                        timer.play(); // Start timer
+                        timerOn = true;
+                        timerPaused = false;
+                        button.setText("Pause");
+                        startButton.setText("Pause All");
+                        timerLabel.setTextFill(Color.GREEN);
+
+                    } else if (timerPaused) {
+
+                        timer.play();
+                        timerPaused = false;
+                        timerLabel.setTextFill(Color.GREEN);
+                        button.setText("Pause");
+                        startButton.setText("Pause All");
+                    } else if (!timerPaused) {
+
+                        timer.pause();
+                        timerPaused = true;
+                        button.setText("Resume");
+                        timerLabel.setTextFill(Color.RED);
+                    }
+                }
+            });
+            buttons[i].setLayoutX(170);
+            buttons[i].setLayoutY(buttonYValue);
+
+            pane.getChildren().add(buttons[i]);
+
+            buttonYValue += 15;
+        }
     }
     
     
