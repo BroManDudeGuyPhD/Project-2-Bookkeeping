@@ -104,6 +104,7 @@ public class MainScreenController implements Initializable {
 
     }
 
+    int buttonDeterminer = 0;
     public void generateButtons(Pane pane) {
 
         int buttonYValue = 42;
@@ -111,6 +112,7 @@ public class MainScreenController implements Initializable {
         int timerYValue = 46;
 
         for (int i = 0; i < teamsAmount; i++) {
+            final int q = i;
             //Initialize labesl with team names
             teamNames[i] = new Label();
             teamNames[i].setText("Team " + i);
@@ -119,7 +121,7 @@ public class MainScreenController implements Initializable {
 
             //Initialize team timers
             teamTimers[i] = new Label();
-            teamTimers[i].setText("00:00");
+            //teamTimers[i].setText("00:00");
             teamTimers[i].setLayoutX(206);
             teamTimers[i].setLayoutY(timerYValue);
             //206 46
@@ -127,7 +129,40 @@ public class MainScreenController implements Initializable {
             //Initialize buttons to control team timers
             buttons[i] = new Button();
             buttons[i].setText("Start All");
-            buttons[i].setOnAction(handleButtonAction);
+            //buttons[i].setOnAction(handleButtonAction);
+            buttons[i].setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    System.out.println("YAY " + q);
+                    
+//                     if (!timerOn) {
+//
+//                        timer.play(); // Start timer
+//                        buttonDeterminer = q;
+//                        timerOn = true;
+//                        timerPaused = false;
+//                        button.setText("Pause");
+//                        startButton.setText("Pause All");
+//                        teamTimers[q].setTextFill(Color.RED);
+//
+//                    } else if (timerPaused) {
+//
+//                        timer.play();
+//                        timerPaused = false;
+//                        timerLabel.setTextFill(Color.GREEN);
+//                        button.setText("Pause");
+//                        startButton.setText("Pause All");
+//                    } else if (!timerPaused) {
+//
+//                        timer.pause();
+//                        timerPaused = true;
+//                        button.setText("Resume");
+//                        timerLabel.setTextFill(Color.RED);
+//                    }
+
+                   
+                }
+            });
 
             buttons[i].setLayoutX(98);
             buttons[i].setLayoutY(buttonYValue);
@@ -152,7 +187,7 @@ public class MainScreenController implements Initializable {
                 minutes++;
                 seconds = 0;
             }
-            timerLabel.setText(String.format("%02d:%02d", minutes, seconds));
+            teamTimers[buttonDeterminer].setText(String.format("%02d:%02d", minutes, seconds));
         };
 
         timer = new Timeline(
