@@ -30,11 +30,15 @@ public class MainScreenController implements Initializable {
     boolean timerPaused = true;
     int seconds = 0;
     int minutes = 0;
-    int teamsAmount = 20;
+    int teamsAmount = 10;
     
     Label[] teamTimers = new Label[teamsAmount];
     Label[] teamNames = new Label[teamsAmount];
     Button[] buttons = new Button[teamsAmount];
+    int[] teamTimerSeconds = new int[teamsAmount];
+    int[] teamTimerMinutes = new int[teamsAmount];
+    
+    boolean[] teamTimerPaused = new boolean[teamsAmount];
 
     EventHandler<ActionEvent> eventHandler = null;
     javafx.animation.Timeline timer = null;
@@ -85,19 +89,25 @@ public class MainScreenController implements Initializable {
     public void handleStartButton(ActionEvent event) {
 
         if (!timerOn) {
-
+            System.out.println("YAY");
             timer.play(); // Start timer
             timerOn = true;
             timerPaused = false;
-            button.setText("Pause");
+            
             startButton.setText("Pause All");
             timerLabel.setTextFill(Color.GREEN);
+            
+            for(int q = 0; q < teamsAmount; q++){
+                teamTimerPaused[q] = false;
+                System.out.println("Team "+q+" set to true");
+                //buttons[q].setText("Pause");
+            }
 
         } else if (!timerPaused) {
 
             timer.pause();
             timerPaused = true;
-            button.setText("Resume");
+            
             startButton.setText("Resume All");
             timerLabel.setTextFill(Color.RED);
         }
@@ -112,7 +122,15 @@ public class MainScreenController implements Initializable {
         int timerYValue = 46;
 
         for (int i = 0; i < teamsAmount; i++) {
+            //variable to refference i, since refference variable here must be final
             final int q = i;
+            teamTimerSeconds[i] = 0;
+            teamTimerMinutes[i] = 0;
+
+            //Initialize boolean arrays for teamTimers logic (starts at false)
+            teamTimerPaused[i] = true;
+            
+            
             //Initialize labesl with team names
             teamNames[i] = new Label();
             teamNames[i].setText("Team " + i);
@@ -135,35 +153,18 @@ public class MainScreenController implements Initializable {
                 public void handle(ActionEvent actionEvent) {
                     System.out.println("YAY " + q);
                     teamTimers[q].setTextFill(Color.RED);
-//                     if (!timerOn) {
-//
-//                        timer.play(); // Start timer
-//                        buttonDeterminer = q;
-//                        timerOn = true;
-//                        timerPaused = false;
-//                        button.setText("Pause");
-//                        startButton.setText("Pause All");
-//                        teamTimers[q].setTextFill(Color.RED);
-//
-//                    } else if (timerPaused) {
-//
-//                        timer.play();
-//                        timerPaused = false;
-//                        timerLabel.setTextFill(Color.GREEN);
-//                        button.setText("Pause");
-//                        startButton.setText("Pause All");
-//                    } else if (!timerPaused) {
-//
-//                        timer.pause();
-//                        timerPaused = true;
-//                        button.setText("Resume");
-//                        timerLabel.setTextFill(Color.RED);
-//                    }
+                     
+                    if (teamTimerPaused[q]) {
+                        buttons[q].setText("Pause");
+                    } else {
+                        buttons[q].setText("Resume");
+                    }
 
-                   
+                    teamTimerPaused[q] = !teamTimerPaused[q];
+                    buttonDeterminer = q;
                 }
-                
             });
+
 
             buttons[i].setLayoutX(98);
             buttons[i].setLayoutY(buttonYValue);
@@ -188,8 +189,32 @@ public class MainScreenController implements Initializable {
                 minutes++;
                 seconds = 0;
             }
-            teamTimers[buttonDeterminer].setText(String.format("%02d:%02d", minutes, seconds));
+           
+
+            
+            
+            timerLabel.setText(String.format("%02d:%02d", minutes, seconds));
+
+            for (int i = 0; i < teamsAmount; i++) {
+                
+                if (!teamTimerPaused[i]) {
+                teamTimerSeconds[i]++;
+                if (teamTimerSeconds[i] == 60) {
+                    teamTimerMinutes[i]++;
+                    teamTimerSeconds[i] = 0;
+                }
+            }
+                
+                teamTimers[i].setText(String.format("%02d:%02d", teamTimerMinutes[i], teamTimerSeconds[i]));
+            }
+
         };
+
+        timer = new Timeline(
+                new KeyFrame(Duration.millis(1000), eventHandler));
+        timer.setCycleCount(180);
+
+
 
         
 
