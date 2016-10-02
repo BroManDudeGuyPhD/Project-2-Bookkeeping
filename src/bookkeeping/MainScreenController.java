@@ -121,7 +121,7 @@ public class MainScreenController implements Initializable {
 
             //Initialize team timers
             teamTimers[i] = new Label();
-            //teamTimers[i].setText("00:00");
+            teamTimers[i].setText("00:00");
             teamTimers[i].setLayoutX(206);
             teamTimers[i].setLayoutY(timerYValue);
             //206 46
@@ -134,7 +134,7 @@ public class MainScreenController implements Initializable {
                 @Override
                 public void handle(ActionEvent actionEvent) {
                     System.out.println("YAY " + q);
-                    
+                    teamTimers[q].setTextFill(Color.RED);
 //                     if (!timerOn) {
 //
 //                        timer.play(); // Start timer
@@ -162,6 +162,7 @@ public class MainScreenController implements Initializable {
 
                    
                 }
+                
             });
 
             buttons[i].setLayoutX(98);
@@ -190,9 +191,7 @@ public class MainScreenController implements Initializable {
             teamTimers[buttonDeterminer].setText(String.format("%02d:%02d", minutes, seconds));
         };
 
-        timer = new Timeline(
-                new KeyFrame(Duration.millis(1000), eventHandler));
-        timer.setCycleCount(180);
+        
 
     }
 
