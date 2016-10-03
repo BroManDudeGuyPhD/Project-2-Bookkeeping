@@ -32,6 +32,7 @@ public class MainScreenController implements Initializable {
     int minutes = 0;
     int teamsAmount = 10;
     
+    
     Label[] teamTimers = new Label[teamsAmount];
     Label[] teamNames = new Label[teamsAmount];
     Button[] buttons = new Button[teamsAmount];
@@ -115,8 +116,17 @@ public class MainScreenController implements Initializable {
     }
 
     int buttonDeterminer = 0;
-    public void generateButtons(Pane pane) {
+    
+    
+    public Pane getPane(Pane pane) {
 
+        return pane;
+        
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        
         int buttonYValue = 42;
         int labelYValue = 46;
         int timerYValue = 46;
@@ -176,11 +186,7 @@ public class MainScreenController implements Initializable {
             buttonYValue += 27;
             labelYValue += 27;
             timerYValue += 27;
-        }
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
+        
         System.out.println("Initialized!");
 
         eventHandler = e -> {
@@ -195,17 +201,17 @@ public class MainScreenController implements Initializable {
             
             timerLabel.setText(String.format("%02d:%02d", minutes, seconds));
 
-            for (int i = 0; i < teamsAmount; i++) {
+            for (int j = 0; j < teamsAmount; j++) {
                 
-                if (!teamTimerPaused[i]) {
-                teamTimerSeconds[i]++;
-                if (teamTimerSeconds[i] == 60) {
-                    teamTimerMinutes[i]++;
-                    teamTimerSeconds[i] = 0;
+                if (!teamTimerPaused[j]) {
+                teamTimerSeconds[j]++;
+                if (teamTimerSeconds[j] == 60) {
+                    teamTimerMinutes[j]++;
+                    teamTimerSeconds[j] = 0;
                 }
             }
                 
-                teamTimers[i].setText(String.format("%02d:%02d", teamTimerMinutes[i], teamTimerSeconds[i]));
+                teamTimers[j].setText(String.format("%02d:%02d", teamTimerMinutes[j], teamTimerSeconds[j]));
             }
 
         };
@@ -214,10 +220,7 @@ public class MainScreenController implements Initializable {
                 new KeyFrame(Duration.millis(1000), eventHandler));
         timer.setCycleCount(180);
 
-
-
-        
-
     }
 
+}
 }
