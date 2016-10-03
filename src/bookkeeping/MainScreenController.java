@@ -5,33 +5,33 @@
  */
 package bookkeeping;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Application;
+import static javafx.application.Application.launch;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
  *
- * @author AndrewFossier
+ * @author aaf8553
  */
-public class MainScreenController implements Initializable {
-
+public class MainScreenController extends Application {
+    
     boolean timerOn = false;
     boolean timerPaused = true;
     int seconds = 0;
     int minutes = 0;
     int teamsAmount = 10;
-    
+    int buttonDeterminer = 0;
     
     Label[] teamTimers = new Label[teamsAmount];
     Label[] teamNames = new Label[teamsAmount];
@@ -43,93 +43,67 @@ public class MainScreenController implements Initializable {
 
     EventHandler<ActionEvent> eventHandler = null;
     javafx.animation.Timeline timer = null;
+    
+    int buttonYValue = 42;
+    int labelYValue = 46;
+    int timerYValue = 46;
+    
+    @Override
+    public void start(Stage primaryStage) {
+        Pane root = new Pane();
+        Scene scene = new Scene(root, 1024, 768);
 
-    @FXML
-    private Button button;
-    @FXML
-    private Label timerLabel;
-    @FXML
-    private Button startButton;
-    @FXML
-    private CheckBox Problem1;
-    @FXML
-    private Label teamNumber;
+        //Initialize main timer
+        Label mainTimerLabel = new Label();
+        mainTimerLabel.setText("00:00");
+        mainTimerLabel.setLayoutX(512);
+        mainTimerLabel.setLayoutY(19);
+        root.getChildren().add(mainTimerLabel);
+        
+        //Initialize start button
+        Button startButton = new Button();
+        startButton.setText("Start All");
+        startButton.setLayoutX(439);
+        startButton.setLayoutY(19);
+        root.getChildren().add(startButton);
+        
+        startButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                if (!timerOn) {
+                    System.out.println("YAY");
+                    timer.play(); // Start timer
+                    timerOn = true;
+                    timerPaused = false;
 
-    @FXML
-    public void handleButtonAction(ActionEvent event) {
+                    startButton.setText("Pause All");
+                    mainTimerLabel.setTextFill(Color.GREEN);
 
-        System.out.println("YAY");
+                    for (int q = 0; q < teamsAmount; q++) {
+                        teamTimerPaused[q] = false;
+                        System.out.println("Team " + q + " set to true");
+                        //buttons[q].setText("Pause");
+                    }
 
-        if (!timerOn) {
-
-            timer.play(); // Start timer
-            timerOn = true;
-            timerPaused = false;
-            button.setText("Pause");
-            startButton.setText("Pause All");
-            timerLabel.setTextFill(Color.GREEN);
-
-        } else if (timerPaused) {
+                } 
+                
+                else if (timerPaused) {
 
             timer.play();
             timerPaused = false;
-            timerLabel.setTextFill(Color.GREEN);
-            button.setText("Pause");
+            mainTimerLabel.setTextFill(Color.GREEN);
+            startButton.setText("Pause");
             startButton.setText("Pause All");
         } else if (!timerPaused) {
 
-            timer.pause();
-            timerPaused = true;
-            button.setText("Resume");
-            timerLabel.setTextFill(Color.RED);
-        }
+                    timer.pause();
+                    timerPaused = true;
 
-    }
-
-    @FXML
-    public void handleStartButton(ActionEvent event) {
-
-        if (!timerOn) {
-            System.out.println("YAY");
-            timer.play(); // Start timer
-            timerOn = true;
-            timerPaused = false;
-            
-            startButton.setText("Pause All");
-            timerLabel.setTextFill(Color.GREEN);
-            
-            for(int q = 0; q < teamsAmount; q++){
-                teamTimerPaused[q] = false;
-                System.out.println("Team "+q+" set to true");
-                //buttons[q].setText("Pause");
+                    startButton.setText("Resume All");
+                    mainTimerLabel.setTextFill(Color.RED);
+                }
             }
-
-        } else if (!timerPaused) {
-
-            timer.pause();
-            timerPaused = true;
-            
-            startButton.setText("Resume All");
-            timerLabel.setTextFill(Color.RED);
-        }
-
-    }
-
-    int buttonDeterminer = 0;
-    
-    
-    public Pane getPane(Pane pane) {
-
-        return pane;
-        
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        
-        int buttonYValue = 42;
-        int labelYValue = 46;
-        int timerYValue = 46;
+        });
 
         for (int i = 0; i < teamsAmount; i++) {
             //variable to refference i, since refference variable here must be final
@@ -180,14 +154,14 @@ public class MainScreenController implements Initializable {
             buttons[i].setLayoutY(buttonYValue);
 
             //Add Children elements for each team to the pane
-            pane.getChildren().add(buttons[i]);
-            pane.getChildren().add(teamNames[i]);
-            pane.getChildren().add(teamTimers[i]);
+            root.getChildren().add(buttons[i]);
+            root.getChildren().add(teamNames[i]);
+            root.getChildren().add(teamTimers[i]);
             buttonYValue += 27;
             labelYValue += 27;
             timerYValue += 27;
         
-        System.out.println("Initialized!");
+        System.out.println("Initialized! "+i);
 
         eventHandler = e -> {
             seconds++;
@@ -199,7 +173,7 @@ public class MainScreenController implements Initializable {
 
             
             
-            timerLabel.setText(String.format("%02d:%02d", minutes, seconds));
+            mainTimerLabel.setText(String.format("%02d:%02d", minutes, seconds));
 
             for (int j = 0; j < teamsAmount; j++) {
                 
@@ -221,6 +195,19 @@ public class MainScreenController implements Initializable {
         timer.setCycleCount(180);
 
     }
+        
+        
+        
+        primaryStage.setTitle("Hello World!");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
 
-}
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
+    
 }
