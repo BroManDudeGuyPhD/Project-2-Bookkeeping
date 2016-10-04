@@ -55,7 +55,7 @@ public class StartScreenController implements Initializable {
         if(isInteger(stringTeam)&& isInteger(stringTime) && isInteger(stringProb)){
 
             mainC.mainScreen(Integer.parseInt(stringTeam),Integer.parseInt(stringTime),Integer.parseInt(stringProb));
-
+            mainC.closeEdit();
         }
         
 
