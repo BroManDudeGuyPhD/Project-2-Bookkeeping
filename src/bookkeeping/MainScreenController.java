@@ -47,10 +47,11 @@ public class MainScreenController extends Application {
     
     Label[] teamTimers = new Label[teamsAmount];
     Label[] teamNames = new Label[teamsAmount];
+    Button[] problemStatus = new Button[teamsAmount];
     Button[] buttons = new Button[teamsAmount];
     int[] teamTimerSeconds = new int[teamsAmount];
     int[] teamTimerMinutes = new int[teamsAmount];
-    boolean[] problemStatus = new boolean[teamsAmount];
+    
     boolean[] teamTimerPaused = new boolean[teamsAmount];
 
     public Stage startStage = new Stage();
@@ -77,7 +78,6 @@ public class MainScreenController extends Application {
             startStage.setScene(new Scene(root1));
             startStage.show();
 
-            System.out.println(start.getInfo());
 
         } catch (IOException ex) {
             Logger.getLogger(MainScreenController.class.getName()).log(Level.SEVERE, null, ex);
@@ -99,9 +99,10 @@ public class MainScreenController extends Application {
         teamTimers = new Label[teamsAmount];
         teamNames = new Label[teamsAmount];
         buttons = new Button[teamsAmount];
+        problemStatus = new Button[problemAmount];
         teamTimerSeconds = new int[teamsAmount];
-        teamTimerMinutes = new int[problemAmount];
-        problemStatus = new boolean[teamsAmount];
+        teamTimerMinutes = new int[teamsAmount];
+        
         teamTimerPaused = new boolean[teamsAmount];
         int totalTimer = totalTime;
 
@@ -180,7 +181,6 @@ public class MainScreenController extends Application {
             //Initialize buttons to control team timers
             buttons[i] = new Button();
             buttons[i].setText("Team "+i);
-            //buttons[i].setOnAction(handleButtonAction);
             buttons[i].setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
@@ -189,24 +189,45 @@ public class MainScreenController extends Application {
                     buttonDeterminer = q;
                     teamPopup.close();
                     Pane root = new Pane();
-                    Scene scene = new Scene(root, 600, 400);
+                    Scene scene = new Scene(root, 400, 200);
                     teamPopup.setTitle("Team "+buttonDeterminer);
                     Button pause = new Button();
                     pause.setText("Pause Team Timer");
-                    pause.setLayoutX(150);
-                    pause.setLayoutY(25);
+                    pause.setLayoutX(56);
+                    pause.setLayoutY(44);
                     root.getChildren().add(pause);
                     
                     Label totalTime = new Label();
-                    totalTime.setLayoutX(150);
-                    totalTime.setLayoutY(35);
+                    totalTime.setLayoutX(186);
+                    totalTime.setLayoutY(6);
+                    totalTime.setText("Temp");
                     root.getChildren().add(totalTime);
                     
                     
-                    CheckBox problems = new CheckBox();
-                    problems.setLayoutX(160);
-                    problems.setLayoutY(25);
-                    root.getChildren().add(problems);
+                    int checkButtonXLayout = 2;
+                    for(int i = 1; i < problemAmount; i++){
+                        problemStatus[i] = new Button();
+                       
+                        
+                        if(i <= 4){
+                            problemStatus[i].setLayoutY(89);
+                            problemStatus[i].setLayoutX(checkButtonXLayout);
+                            checkButtonXLayout +=80;
+                        }
+
+                        
+                        if(i > 4){
+                            checkButtonXLayout = 2;
+                            problemStatus[i].setLayoutY(126);
+                            problemStatus[i].setLayoutX(checkButtonXLayout);
+                            checkButtonXLayout +=80;
+                        }
+                        
+                        problemStatus[i].setText("Problem "+i);
+                        root.getChildren().add(problemStatus[i]);
+
+                    }
+                    
                     
                     //Grab team data
                     

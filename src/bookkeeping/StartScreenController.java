@@ -42,23 +42,14 @@ public class StartScreenController implements Initializable {
     @FXML
     private void handleButtonAction(ActionEvent event) {
         stringTeam=teams.getText();
-        
-
-        
         stringTime=times.getText();
-        
-        
         stringProb=probs.getText();
-        
-        
-        
+
         if(isInteger(stringTeam)&& isInteger(stringTime) && isInteger(stringProb)){
 
             mainC.mainScreen(Integer.parseInt(stringTeam),Integer.parseInt(stringTime),Integer.parseInt(stringProb));
             mainC.closeEdit();
         }
-        
-
     }
     
     public String getTeams(){
@@ -84,12 +75,6 @@ public class StartScreenController implements Initializable {
         // TODO
     }    
     
-    public ArrayList<String> getInfo(){
-        info.add(numTeam);
-        info.add(maxTime);
-        info.add(numProbs);
-        
-        return info;
-    }
+
     
 }
