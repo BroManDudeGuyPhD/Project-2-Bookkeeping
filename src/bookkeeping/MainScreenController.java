@@ -54,6 +54,7 @@ public class MainScreenController extends Application {
 
     public Stage startStage = new Stage();
     public Stage primaryStage = new Stage();
+    StartScreenController start;
     EventHandler<ActionEvent> eventHandler = null;
     javafx.animation.Timeline timer = null;
     
@@ -92,21 +93,38 @@ public class MainScreenController extends Application {
         
     
     
-    public void mainScreen(){
-        StartScreenController start = new StartScreenController();
-        ArrayList<String> results = new ArrayList<>();
-        results = start.getInfo();
+    public void mainScreen(int teamNumbers, int totalTime, int problemAmount){
+        
+    teamsAmount = teamNumbers;
+    teamTimers = new Label[teamsAmount];
+    teamNames = new Label[teamsAmount];
+    buttons =  new Button[teamsAmount];
+    teamTimerSeconds = new int[teamsAmount];
+    teamTimerMinutes = new int[teamsAmount];
+    
+    teamTimerPaused = new boolean[teamsAmount];
+
         
         
-        teamsAmount = Integer.parseInt(results.get(0));
-        int maxTime = Integer.parseInt(stringTime);
-        int numProbs = Integer.parseInt(stringProb);
+//        ArrayList<String> results = new ArrayList<>();
+//        results = start.getInfo();
+//        
+//        
+        
+        //String teams= (start.getTeams());
+        
+        
+        //int maxTime = Integer.parseInt(stringTime);
+        //int numProbs = Integer.parseInt(stringProb);
 
         
         startStage.close();
         Pane root = new Pane();
         Scene scene = new Scene(root, 1024, 768);
-                //Initialize main timer
+                
+
+        
+//Initialize main timer
         Label mainTimerLabel = new Label();
         mainTimerLabel.setText("00:00");
         mainTimerLabel.setLayoutX(512);
@@ -251,7 +269,7 @@ public class MainScreenController extends Application {
         
         
         
-        primaryStage.setTitle("Hello World!");
+        primaryStage.setTitle("BOOKKEEPER 3000");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

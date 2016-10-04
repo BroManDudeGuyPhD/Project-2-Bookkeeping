@@ -11,6 +11,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -31,11 +32,12 @@ public class StartScreenController implements Initializable {
     @FXML
     private int numTeam,maxTime,numProbs;
     @FXML
-    private String stringTeam,stringProb,stringTime;
+    public String stringTeam,stringProb,stringTime;
 
     ArrayList info = new ArrayList();
     
     MainScreenController mainC = new MainScreenController();
+    
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
@@ -51,13 +53,16 @@ public class StartScreenController implements Initializable {
         
         
         if(isInteger(stringTeam)&& isInteger(stringTime) && isInteger(stringProb)){
-           
-            System.out.println("WORKS");
-            getInfo();
-            
-        }
 
-        mainC.mainScreen();
+            mainC.mainScreen(Integer.parseInt(stringTeam),Integer.parseInt(stringTime),Integer.parseInt(stringProb));
+
+        }
+        
+
+    }
+    
+    public String getTeams(){
+        return stringTeam;
     }
     
     public static boolean isInteger(String s) {
