@@ -5,19 +5,27 @@
  */
 package bookkeeping;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 /**
@@ -30,8 +38,11 @@ public class MainScreenController extends Application {
     boolean timerPaused = true;
     int seconds = 0;
     int minutes = 0;
-    int teamsAmount = 10;
+    int teamsAmount = 0;
     int buttonDeterminer = 0;
+    int buttonYValue = 42;
+    int labelYValue = 46;
+    int timerYValue = 46;
     
     Label[] teamTimers = new Label[teamsAmount];
     Label[] teamNames = new Label[teamsAmount];
@@ -41,19 +52,61 @@ public class MainScreenController extends Application {
     
     boolean[] teamTimerPaused = new boolean[teamsAmount];
 
+    public Stage startStage = new Stage();
+    public Stage primaryStage = new Stage();
     EventHandler<ActionEvent> eventHandler = null;
     javafx.animation.Timeline timer = null;
     
-    int buttonYValue = 42;
-    int labelYValue = 46;
-    int timerYValue = 46;
+    public void closeEdit(){
+        primaryStage.close();
+    }
+    
+    
     
     @Override
     public void start(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+        //info();
+
+
+        //Create Edit button
+        StartScreenController start = new StartScreenController();
+        try {
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("StartScreen.fxml"));
+                    Parent root1 = (Parent) fxmlLoader.load();
+                    startStage.initModality(Modality.WINDOW_MODAL);
+                    startStage.initStyle(StageStyle.DECORATED);
+                    startStage.setTitle("EDIT");
+                    startStage.setScene(new Scene(root1));
+                    startStage.show();
+                    
+                    System.out.println(start.getInfo());
+                    
+                } catch (IOException ex) {
+                    Logger.getLogger(MainScreenController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+          
+            }
+        
+
+        
+    
+    
+    public void mainScreen(){
+        StartScreenController start = new StartScreenController();
+        ArrayList<String> results = new ArrayList<>();
+        results = start.getInfo();
+        
+        
+        teamsAmount = Integer.parseInt(results.get(0));
+        int maxTime = Integer.parseInt(stringTime);
+        int numProbs = Integer.parseInt(stringProb);
+
+        
+        startStage.close();
         Pane root = new Pane();
         Scene scene = new Scene(root, 1024, 768);
-
-        //Initialize main timer
+                //Initialize main timer
         Label mainTimerLabel = new Label();
         mainTimerLabel.setText("00:00");
         mainTimerLabel.setLayoutX(512);

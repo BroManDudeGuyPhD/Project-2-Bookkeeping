@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bookkeeping.StartScreenController">
+     <children>
+        <Button fx:id="button" layoutX="85.0" layoutY="161.0" onAction="#handleButtonAction" text="Submit" />
+        <Label fx:id="label" layoutX="126" layoutY="120" minHeight="16" minWidth="69" />
+      <TextField fx:id="teams" layoutX="37.0" layoutY="24.0" promptText="Enter  Number of Teams" />
+      <TextField fx:id="probs" layoutX="37.0" layoutY="75.0" promptText="Enter Number of Problems" />
+      <TextField fx:id="times" layoutX="37.0" layoutY="125.0" promptText="Enter of Time of Contest" />
+      <Label layoutX="205.0" layoutY="129.0" text="Max of 180 Minutes" />
+      <Label layoutX="205.0" layoutY="79.0" text="Max of 10 Problems" />
+      <Label layoutX="205.0" layoutY="28.0" text="Max of 50 Teams" />
+    </children>
+</AnchorPane>
