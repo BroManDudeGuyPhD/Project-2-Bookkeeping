@@ -147,7 +147,7 @@ public class MainScreenController extends Application {
                     timer.play();
                     timerPaused = false;
                     mainTimerLabel.setTextFill(Color.GREEN);
-                    startButton.setText("Pause");
+
                     startButton.setText("Pause All");
                 } else if (!timerPaused) {
 
@@ -193,38 +193,69 @@ public class MainScreenController extends Application {
                     teamPopup.setTitle("Team "+buttonDeterminer);
                     Button pause = new Button();
                     pause.setText("Pause Team Timer");
-                    pause.setLayoutX(56);
+                    pause.setLayoutX(146);
                     pause.setLayoutY(44);
                     root.getChildren().add(pause);
                     
-                    Label totalTime = new Label();
-                    totalTime.setLayoutX(186);
-                    totalTime.setLayoutY(6);
-                    totalTime.setText("Temp");
-                    root.getChildren().add(totalTime);
+                    Label key = new Label();
+                    key.setLayoutX(62);
+                    key.setLayoutY(6);
+                    key.setText("Green: Running || Blue: Paused || Red: completed");
+                    root.getChildren().add(key);
                     
                     
-                    int checkButtonXLayout = 2;
-                    for(int i = 1; i < problemAmount; i++){
-                        problemStatus[i] = new Button();
-                       
+                    int checkButtonXLayout = 1;
+                    for(int b = 0; b < problemAmount; b++){
+                        problemStatus[b] = new Button();
+                        problemStatus[b].setTextFill(Color.GREEN);
                         
-                        if(i <= 4){
-                            problemStatus[i].setLayoutY(89);
-                            problemStatus[i].setLayoutX(checkButtonXLayout);
-                            checkButtonXLayout +=80;
+                        if(b < 4){
+                            problemStatus[b].setLayoutY(89);
+                            problemStatus[b].setLayoutX(checkButtonXLayout);
+                            checkButtonXLayout += 80;
+                            System.out.println(b);
+                        }
+                        
+                        else if(b == 4){
+                            problemStatus[b].setLayoutY(89);
+                            problemStatus[b].setLayoutX(checkButtonXLayout);
+                            checkButtonXLayout = 1;
+                            System.out.println(b);
                         }
 
                         
-                        if(i > 4){
-                            checkButtonXLayout = 2;
-                            problemStatus[i].setLayoutY(126);
-                            problemStatus[i].setLayoutX(checkButtonXLayout);
-                            checkButtonXLayout +=80;
+                        else if(b > 4){
+                            
+                            problemStatus[b].setLayoutY(126);
+                            problemStatus[b].setLayoutX(checkButtonXLayout);
+                            checkButtonXLayout += 80;
+                            System.out.println(b);
                         }
-                        
-                        problemStatus[i].setText("Problem "+i);
-                        root.getChildren().add(problemStatus[i]);
+                        int temp = b;
+                        temp = temp + 1;
+                        problemStatus[b].setText("Problem " + temp);
+                        root.getChildren().add(problemStatus[b]);
+
+                        final int tempTemp = temp;
+                        final int c = b;
+                        problemStatus[b].setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent actionEvent) {
+                                System.out.println("YAY " + q);
+                                teamTimers[q].setTextFill(Color.RED);
+
+                                if (teamTimerPaused[q]) {
+                                    problemStatus[c].setText("Resume "+tempTemp);
+                                } else {
+                                    problemStatus[c].setTextFill(Color.BLUE);
+                                    problemStatus[c].setText("Resume");
+                                }
+
+                                teamTimerPaused[q] = !teamTimerPaused[q];
+                                buttonDeterminer = q;
+                            }
+
+                        });
 
                     }
                     
