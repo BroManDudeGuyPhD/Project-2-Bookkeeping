@@ -241,18 +241,17 @@ public class MainScreenController extends Application {
                         problemStatus[b].setOnAction(new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent actionEvent) {
-                                System.out.println("YAY " + q);
                                 teamTimers[q].setTextFill(Color.RED);
 
                                 if (teamTimerPaused[q]) {
                                     problemStatus[c].setText("Resume "+tempTemp);
+                                    pause.setText("Resume timing");
                                 } else {
                                     problemStatus[c].setTextFill(Color.BLUE);
                                     problemStatus[c].setText("Resume");
                                 }
 
                                 teamTimerPaused[q] = !teamTimerPaused[q];
-                                buttonDeterminer = q;
                             }
 
                         });
