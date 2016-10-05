@@ -6,6 +6,32 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1">
-    
+
+<AnchorPane id="AnchorPane" prefHeight="300.0" prefWidth="500.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+   <children>
+      <Label layoutX="122.0" layoutY="14.0" text="Green: Running" textFill="#12b933" />
+      <Label layoutX="217.0" layoutY="14.0" text="Blue: Paused" textFill="#4723bf" />
+      <Label layoutX="293.0" layoutY="14.0" text=" Red: completed" textFill="RED" />
+      <Button layoutX="194.0" layoutY="45.0" mnemonicParsing="false" text="Pause Team Timer" />
+      <Button layoutX="5.0" layoutY="89.0" mnemonicParsing="false" text="Problem 1" />
+      <Button layoutX="105.0" layoutY="89.0" mnemonicParsing="false" text="Problem 1" />
+      <Button layoutX="215.0" layoutY="89.0" mnemonicParsing="false" text="Problem 1" />
+      <Button layoutX="309.0" layoutY="89.0" mnemonicParsing="false" text="Problem 1" />
+      <Button layoutX="409.0" layoutY="89.0" mnemonicParsing="false" text="Problem 1" />
+      <Button layoutX="5.0" layoutY="185.0" mnemonicParsing="false" text="Problem 1" />
+      <Button layoutX="106.0" layoutY="185.0" mnemonicParsing="false" text="Problem 1" />
+      <Button layoutX="215.0" layoutY="185.0" mnemonicParsing="false" text="Problem 1" />
+      <Button layoutX="310.0" layoutY="185.0" mnemonicParsing="false" text="Problem 1" />
+      <Button layoutX="409.0" layoutY="185.0" mnemonicParsing="false" text="Problem 1" />
+      <CheckBox layoutX="1.0" layoutY="125.0" mnemonicParsing="false" text="Completed" />
+      <CheckBox layoutX="101.0" layoutY="125.0" mnemonicParsing="false" text="Completed" />
+      <CheckBox layoutX="210.0" layoutY="125.0" mnemonicParsing="false" text="Completed" />
+      <CheckBox layoutX="305.0" layoutY="125.0" mnemonicParsing="false" text="Completed" />
+      <CheckBox layoutX="405.0" layoutY="125.0" mnemonicParsing="false" text="Completed" />
+      <CheckBox layoutX="1.0" layoutY="216.0" mnemonicParsing="false" text="Completed" />
+      <CheckBox layoutX="101.0" layoutY="216.0" mnemonicParsing="false" text="Completed" />
+      <CheckBox layoutX="210.0" layoutY="216.0" mnemonicParsing="false" text="Completed" />
+      <CheckBox layoutX="305.0" layoutY="216.0" mnemonicParsing="false" text="Completed" />
+      <CheckBox layoutX="405.0" layoutY="216.0" mnemonicParsing="false" text="Completed" />
+   </children>
 </AnchorPane>
