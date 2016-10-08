@@ -7,6 +7,8 @@ package bookkeeping;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.KeyFrame;
@@ -29,10 +31,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
-/**
- *
- * @author aaf8553
- */
+
 public class MainScreenController extends Application {
     
     boolean timerOn = false;
@@ -40,19 +39,25 @@ public class MainScreenController extends Application {
     int seconds = 0;
     int minutes = 0;
     int teamsAmount = 0;
+    int problemsAmount = 0;
     int buttonDeterminer = 0;
     int buttonYValue = 42;
     int labelYValue = 46;
     int timerYValue = 46;
     
-    Label[] teamTimers = new Label[teamsAmount];
-    Button[] problemButton = new Button[teamsAmount];
-    Button[] buttons = new Button[teamsAmount];
-    CheckBox[] problemStatus = new CheckBox[0];
-    int[] teamTimerSeconds = new int[teamsAmount];
+    //ArrayList<Label> tt= new ArrayList<Label>();
     
-    boolean[] teamTimerPaused = new boolean[teamsAmount];
+    Label[] teamTimers;
+    Button[] problemButton;
+    Button[] buttons;
+    CheckBox[] problemStatus;
+    int[] teamTimerSeconds;
 
+    HashMap<String, ArrayList<String>> teamProblemTimers = new HashMap<>();
+    HashMap<String, ArrayList<Integer>> teamProblemSeconds = new HashMap<>();
+    HashMap<String, ArrayList<String>> teamProblemsStatus = new HashMap<>();
+    HashMap<String, ArrayList<String>> teamProblemsCompletionTimes = new HashMap<>();
+    
     public Stage startStage = new Stage();
     public Stage primaryStage = new Stage();
     Stage teamPopup = new Stage();
@@ -83,26 +88,23 @@ public class MainScreenController extends Application {
         }
 
     }
-    
-    
+
     public void closeEdit(){
         
         startStage.hide();
         System.out.println("Closed!");
     }
     
-
     public void mainScreen(int teamNumbers, int totalTime, int problemAmount) {
     //Initialize local variables to function call
         teamsAmount = teamNumbers;
+        problemsAmount = problemAmount;
+        
         teamTimers = new Label[teamsAmount];
+        
         buttons = new Button[teamsAmount];
         teamTimerSeconds = new int[teamsAmount];
         
-        problemButton = new Button[problemAmount];
-        problemStatus = new CheckBox[problemAmount];
-        
-        teamTimerPaused = new boolean[teamsAmount];
         int totalTimer = totalTime;
 
 
@@ -110,18 +112,21 @@ public class MainScreenController extends Application {
         
     //Set all elements to defaults (Like check boxws to empty) So when they are used they wont be overwritten by re-creating elements again
         
-        for (int problems = 0; problems < problemAmount; problems++) {
-            problemButton[problems] = new Button();
-            problemButton[problems].setTextFill(Color.GREEN);
-
-            problemStatus[problems] = new CheckBox();
-        }
-        
-        for(int teams = 0; teams < teamNumbers; teams++){
+        for (int teams = 0; teams < teamNumbers; teams++) {
             buttons[teams] = new Button();
+            problemButton = new Button[problemAmount];
+            problemStatus = new CheckBox[problemAmount];
+            for (int problems = 0; problems < problemAmount; problems++) {
+                problemButton[problems] = new Button();
+                problemButton[problems].setTextFill(Color.GREEN);
+
+                problemStatus[problems] = new CheckBox();
+            }
         }
         
-       
+        //Initialize Map storing individual problem timers and set all to true
+        
+        
 
         //startStage.close();
         Pane root = new Pane();
@@ -153,11 +158,29 @@ public class MainScreenController extends Application {
                     startButton.setText("Pause All");
                     mainTimerLabel.setTextFill(Color.GREEN);
 
-                    for (int q = 0; q < teamsAmount; q++) {
-                        teamTimerPaused[q] = false;
-                        System.out.println("Team " + q + " set to true");
+                    for (Integer teams = 0; teams < teamsAmount; teams++) {
+                        System.out.println("Team " + teams + " set to true");
                         //buttons[q].setText("Pause");
+                        
+                        teamProblemTimers.put(teams.toString(), new ArrayList<>());
+                        teamProblemSeconds.put(teams.toString(), new ArrayList<>());
+                        teamProblemsStatus.put(teams.toString(), new ArrayList<>());
+                        //Initialise MAP controlling problem timers to FALSE (Not paused)
+                        for(int problems = 0; problems < problemsAmount; problems++){
+                            
+                            //Problem Timers are all running on StareButton
+                            teamProblemTimers.get(teams.toString()).add("TRUE");
+                            
+                            //ProblemTimers initialized to 0
+                            int initializeZero = 0;
+                            teamProblemSeconds.get(teams.toString()).add(initializeZero);
+                            
+                            //No problems are finished yet
+                            teamProblemsStatus.get(teams.toString()).add("FALSE");
+                        }
                     }
+                    
+                    
 
                 } else if (timerPaused) {
 
@@ -177,14 +200,13 @@ public class MainScreenController extends Application {
             }
         });
 
-        for (int i = 0; i < teamsAmount; i++) {
+        for (Integer i = 0; i < teamsAmount; i++) {
             int tempTeamNum = i + 1;
             //variable to refference i, since refference variable here must be final
-            final int q = i;
+            final Integer q = i;
             teamTimerSeconds[i] = 0;
 
             //Initialize boolean arrays for teamTimers logic (starts at false)
-            teamTimerPaused[i] = true;
 
 
             //Initialize team timers
@@ -192,11 +214,10 @@ public class MainScreenController extends Application {
             teamTimers[i].setText("00:00");
             teamTimers[i].setLayoutX(100);
             teamTimers[i].setLayoutY(timerYValue);
-            //206 46
-
+            
+           
             
             //Initialize buttons to control team timers
-            
             buttons[i].setText("Team "+tempTeamNum);
             buttons[i].setOnAction(new EventHandler<ActionEvent>() {
                 @Override
@@ -208,11 +229,7 @@ public class MainScreenController extends Application {
                     Pane root = new Pane();
                     Scene scene = new Scene(root, 500, 300);
                     teamPopup.setTitle("Team "+buttonDeterminer);
-                    Button pause = new Button();
-                    pause.setText("Pause Team Timer");
-                    pause.setLayoutX(194);
-                    pause.setLayoutY(45);
-                    root.getChildren().add(pause);
+
 
                     //Vanity Labels
                     Label key = new Label();
@@ -239,6 +256,7 @@ public class MainScreenController extends Application {
                     
                     int problemButtonXLayout = 5;
                     int problemCBXLayout = 1;
+                    
                     for(int b = 0; b < problemAmount; b++){
                         
                         
@@ -276,30 +294,48 @@ public class MainScreenController extends Application {
                         
                         int temp = b;
                         temp = temp + 1;
+                        
+                        
                         problemButton[b].setText("Problem " + temp);
-                        root.getChildren().add(problemButton[b]);
-                        
-                        
+                        problemButton[b].setTextFill(Color.GREEN);
+                                    
                         problemStatus[b].setText("Completed");
-                        root.getChildren().add( problemStatus[b]);
+                        problemStatus[b].setSelected(false);
+                        
+                        
+                        if (teamProblemsStatus.get(q.toString()).get(b).equals("TRUE")) {
+                            problemButton[b].setText("Completed");
+                            problemButton[b].setTextFill(Color.RED);
 
+                            problemStatus[b].setText("Completed");
+                            problemStatus[b].setSelected(true);
+                        }
+                        
+                        root.getChildren().add(problemButton[b]);
+                        root.getChildren().add( problemStatus[b]);
+                        
+                        
                         final int tempTemp = temp;
                         final int c = b;
                         problemButton[b].setOnAction(new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent actionEvent) {
                                 teamTimers[q].setTextFill(Color.RED);
+                                
 
-                                if (teamTimerPaused[q]) {
+                                if (teamProblemTimers.get(q.toString()).get(q).equals("FALSE")) {
                                     problemButton[c].setTextFill(Color.GREEN);
                                     problemButton[c].setText("Problem "+tempTemp);
-                                    pause.setText("Resume timing");
-                                } else {
+                                    teamProblemTimers.get(q.toString()).set(q,"TRUE");  
+                                } 
+                                
+                                else if (teamProblemTimers.get(q.toString()).get(q).equals("TRUE")) {
                                     problemButton[c].setTextFill(Color.BLUE);
                                     problemButton[c].setText("Resume");
+                                    System.out.println("Team: "+q+ " Problem " +tempTemp+" paused at: "+teamProblemSeconds.get(q.toString()).get(c));
+                                    teamProblemTimers.get(q.toString()).set(q,"FALSE");
                                 }
 
-                                teamTimerPaused[q] = !teamTimerPaused[q];
                             }
 
                         });
@@ -311,10 +347,11 @@ public class MainScreenController extends Application {
                             @Override
                             public void handle(ActionEvent actionEvent) {
                                 
-                                if(teamTimerPaused[q]){
+                                if(teamProblemTimers.get(q.toString()).get(q).equals("FALSE")){
                                     problemButton[c].setText("Completed");
                                     problemButton[c].setTextFill(Color.RED);
-                                    teamTimerPaused[q] = false;
+                                    teamProblemsStatus.get(q.toString()).set(c, "TRUE");
+                                    
                                 }
                                 
                             }
@@ -344,6 +381,7 @@ public class MainScreenController extends Application {
             //Add Children elements for each team to the pane
             root.getChildren().add(buttons[i]);
             root.getChildren().add(teamTimers[i]);
+            
             buttonYValue += 27;
             labelYValue += 27;
             timerYValue += 27;
@@ -359,14 +397,18 @@ public class MainScreenController extends Application {
 
                 mainTimerLabel.setText(String.format("%02d:%02d", minutes, seconds));
 
-                for (int j = 0; j < teamsAmount; j++) {
+                for (Integer teams = 0; teams < teamsAmount; teams++) {
+                    
+                    for (Integer problems = 0; problems < problemsAmount; problems++) {
 
-                        if (!teamTimerPaused[j]) {
-                            teamTimerSeconds[j]++;
+                        if (teamProblemTimers.get(teams.toString()).get(problems).equals("TRUE")) {
+                            Integer tempSeconds = teamProblemSeconds.get(teams.toString()).get(problems);
+                            teamProblemSeconds.get(teams.toString()).set(problems, tempSeconds+=1);
+
                         }
                     
                         int tempMins = 0;
-                        int tempSeconds = teamTimerSeconds[j];
+                        int tempSeconds = teamProblemSeconds.get(teams.toString()).get(problems);
                         
                         while(tempSeconds >= 60){
                             tempMins +=1;
@@ -374,7 +416,8 @@ public class MainScreenController extends Application {
                         }
                         
 
-                    teamTimers[j].setText(String.format("%02d:%02d", tempMins, tempSeconds));
+                    //teamTimers[j].setText(String.format("%02d:%02d", tempMins, tempSeconds));
+                }
                 }
 
             };
