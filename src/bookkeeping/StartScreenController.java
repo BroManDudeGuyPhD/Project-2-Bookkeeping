@@ -30,7 +30,7 @@ public class StartScreenController implements Initializable {
     @FXML
     private TextField teams,times,probs;
     @FXML
-    private int numTeam,maxTime,numProbs;
+    private static int numTeam,maxTime,numProbs;
     @FXML
     public String stringTeam,stringProb,stringTime;
 

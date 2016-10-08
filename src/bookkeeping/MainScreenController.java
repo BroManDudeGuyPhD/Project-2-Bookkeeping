@@ -48,10 +48,12 @@ public class MainScreenController extends Application {
     Label[] teamTimers = new Label[teamsAmount];
     Label[] teamNames = new Label[teamsAmount];
     Button[] problemButton = new Button[teamsAmount];
+  
     Button[] buttons = new Button[teamsAmount];
     CheckBox[] problemStatus = new CheckBox[0];
     int[] teamTimerSeconds = new int[teamsAmount];
     int[] teamTimerMinutes = new int[teamsAmount];
+    
     
     boolean[] teamTimerPaused = new boolean[teamsAmount];
 
@@ -95,14 +97,16 @@ public class MainScreenController extends Application {
     
 
     public void mainScreen(int teamNumbers, int totalTime, int problemAmount) {
-
+        Label[][] probTimers = new Label[teamsAmount][problemAmount];
+        Label[] problemTimers = new Label[problemAmount];
+        int[] probTimerSeconds = new int[problemAmount];
+        int[] probTimerMinutes = new int[problemAmount];
         teamsAmount = teamNumbers;
         teamTimers = new Label[teamsAmount];
         teamNames = new Label[teamsAmount];
         buttons = new Button[teamsAmount];
         teamTimerSeconds = new int[teamsAmount];
         teamTimerMinutes = new int[teamsAmount];
-        
         problemButton = new Button[problemAmount];
         problemStatus = new CheckBox[problemAmount];
         
@@ -162,13 +166,15 @@ public class MainScreenController extends Application {
                 }
             }
         });
-
+        
         for (int i = 0; i < teamsAmount; i++) {
             //variable to refference i, since refference variable here must be final
             final int q = i;
             teamTimerSeconds[i] = 0;
             teamTimerMinutes[i] = 0;
-
+            //set problem timers to 0
+            probTimerSeconds[i] = 0;
+            probTimerMinutes[i] = 0;
             //Initialize boolean arrays for teamTimers logic (starts at false)
             teamTimerPaused[i] = true;
 
@@ -228,14 +234,17 @@ public class MainScreenController extends Application {
                     for(int b = 0; b < problemAmount; b++){
                         problemButton[b] = new Button();
                         problemButton[b].setTextFill(Color.GREEN);
-                        
+            
                         problemStatus[b] = new CheckBox();
                         
+                        probTimers[i][b] = new Label();
+                       
                         
                         if(b < 4){
                             problemButton[b].setLayoutY(89);
                             problemButton[b].setLayoutX(problemButtonXLayout);
                             problemButtonXLayout += 100;
+                            
 
                             problemStatus[b].setLayoutY(125);
                             problemStatus[b].setLayoutX(problemCBXLayout);
