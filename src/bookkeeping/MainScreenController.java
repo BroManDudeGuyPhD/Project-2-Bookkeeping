@@ -46,7 +46,6 @@ public class MainScreenController extends Application {
     int timerYValue = 46;
     
     Label[] teamTimers = new Label[teamsAmount];
-    Label[] teamNames = new Label[teamsAmount];
     Button[] problemButton = new Button[teamsAmount];
     Button[] buttons = new Button[teamsAmount];
     CheckBox[] problemStatus = new CheckBox[0];
@@ -93,12 +92,14 @@ public class MainScreenController extends Application {
         System.out.println("Closed!");
     }
     
+    public void setAllElementsToDefauls(int teamNumbers, int totalTime, int problemAmount) {
+        
+    }
 
     public void mainScreen(int teamNumbers, int totalTime, int problemAmount) {
-
+    //Initialize local variables to function call
         teamsAmount = teamNumbers;
         teamTimers = new Label[teamsAmount];
-        teamNames = new Label[teamsAmount];
         buttons = new Button[teamsAmount];
         teamTimerSeconds = new int[teamsAmount];
         teamTimerMinutes = new int[teamsAmount];
@@ -108,6 +109,24 @@ public class MainScreenController extends Application {
         
         teamTimerPaused = new boolean[teamsAmount];
         int totalTimer = totalTime;
+
+
+    
+        
+    //Set all elements to defaults (Like check boxws to empty) So when they are used they wont be overwritten by re-creating elements again
+        
+        for (int problems = 0; problems < problemAmount; problems++) {
+            problemButton[problems] = new Button();
+            problemButton[problems].setTextFill(Color.GREEN);
+
+            problemStatus[problems] = new CheckBox();
+        }
+        
+        for(int teams = 0; teams < teamNumbers; teams++){
+            buttons[teams] = new Button();
+        }
+        
+       
 
         //startStage.close();
         Pane root = new Pane();
@@ -164,6 +183,7 @@ public class MainScreenController extends Application {
         });
 
         for (int i = 0; i < teamsAmount; i++) {
+            int tempTeamNum = i + 1;
             //variable to refference i, since refference variable here must be final
             final int q = i;
             teamTimerSeconds[i] = 0;
@@ -182,8 +202,8 @@ public class MainScreenController extends Application {
 
             
             //Initialize buttons to control team timers
-            buttons[i] = new Button();
-            buttons[i].setText("Team "+i);
+            
+            buttons[i].setText("Team "+tempTeamNum);
             buttons[i].setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
@@ -226,10 +246,6 @@ public class MainScreenController extends Application {
                     int problemButtonXLayout = 5;
                     int problemCBXLayout = 1;
                     for(int b = 0; b < problemAmount; b++){
-                        problemButton[b] = new Button();
-                        problemButton[b].setTextFill(Color.GREEN);
-                        
-                        problemStatus[b] = new CheckBox();
                         
                         
                         if(b < 4){
@@ -294,7 +310,7 @@ public class MainScreenController extends Application {
                         });
                         
                         
-                        
+                            
                         problemStatus[b].setOnAction(new EventHandler<ActionEvent>() {
 
                             @Override
@@ -302,9 +318,11 @@ public class MainScreenController extends Application {
                                 
                                 problemButton[c].setText("Completed");
                                 problemButton[c].setTextFill(Color.RED);
+                                problemStatus[q].selectedProperty();
                             }
 
                         });
+                        
 
                     }
                     
@@ -344,8 +362,7 @@ public class MainScreenController extends Application {
                 mainTimerLabel.setText(String.format("%02d:%02d", minutes, seconds));
 
                 for (int j = 0; j < teamsAmount; j++) {
-                    
-                    for (int k = 0; k < problemAmount; k++) {
+
                         if (!teamTimerPaused[j]) {
                             teamTimerSeconds[j]++;
                             if (teamTimerSeconds[j] == 60) {
@@ -353,7 +370,7 @@ public class MainScreenController extends Application {
                                 teamTimerSeconds[j] = 0;
                             }
                         }
-                    }
+                    
 
                     teamTimers[j].setText(String.format("%02d:%02d", teamTimerMinutes[j], teamTimerSeconds[j]));
                 }
