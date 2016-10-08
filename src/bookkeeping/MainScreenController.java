@@ -50,7 +50,6 @@ public class MainScreenController extends Application {
     Button[] buttons = new Button[teamsAmount];
     CheckBox[] problemStatus = new CheckBox[0];
     int[] teamTimerSeconds = new int[teamsAmount];
-    int[] teamTimerMinutes = new int[teamsAmount];
     
     boolean[] teamTimerPaused = new boolean[teamsAmount];
 
@@ -92,9 +91,6 @@ public class MainScreenController extends Application {
         System.out.println("Closed!");
     }
     
-    public void setAllElementsToDefauls(int teamNumbers, int totalTime, int problemAmount) {
-        
-    }
 
     public void mainScreen(int teamNumbers, int totalTime, int problemAmount) {
     //Initialize local variables to function call
@@ -102,7 +98,6 @@ public class MainScreenController extends Application {
         teamTimers = new Label[teamsAmount];
         buttons = new Button[teamsAmount];
         teamTimerSeconds = new int[teamsAmount];
-        teamTimerMinutes = new int[teamsAmount];
         
         problemButton = new Button[problemAmount];
         problemStatus = new CheckBox[problemAmount];
@@ -187,7 +182,6 @@ public class MainScreenController extends Application {
             //variable to refference i, since refference variable here must be final
             final int q = i;
             teamTimerSeconds[i] = 0;
-            teamTimerMinutes[i] = 0;
 
             //Initialize boolean arrays for teamTimers logic (starts at false)
             teamTimerPaused[i] = true;
@@ -297,7 +291,8 @@ public class MainScreenController extends Application {
                                 teamTimers[q].setTextFill(Color.RED);
 
                                 if (teamTimerPaused[q]) {
-                                    problemButton[c].setText("Resume "+tempTemp);
+                                    problemButton[c].setTextFill(Color.GREEN);
+                                    problemButton[c].setText("Problem "+tempTemp);
                                     pause.setText("Resume timing");
                                 } else {
                                     problemButton[c].setTextFill(Color.BLUE);
@@ -316,9 +311,12 @@ public class MainScreenController extends Application {
                             @Override
                             public void handle(ActionEvent actionEvent) {
                                 
-                                problemButton[c].setText("Completed");
-                                problemButton[c].setTextFill(Color.RED);
-                                problemStatus[q].selectedProperty();
+                                if(teamTimerPaused[q]){
+                                    problemButton[c].setText("Completed");
+                                    problemButton[c].setTextFill(Color.RED);
+                                    teamTimerPaused[q] = false;
+                                }
+                                
                             }
 
                         });
@@ -365,14 +363,18 @@ public class MainScreenController extends Application {
 
                         if (!teamTimerPaused[j]) {
                             teamTimerSeconds[j]++;
-                            if (teamTimerSeconds[j] == 60) {
-                                teamTimerMinutes[j]++;
-                                teamTimerSeconds[j] = 0;
-                            }
                         }
                     
+                        int tempMins = 0;
+                        int tempSeconds = teamTimerSeconds[j];
+                        
+                        while(tempSeconds >= 60){
+                            tempMins +=1;
+                            tempSeconds -= 60;
+                        }
+                        
 
-                    teamTimers[j].setText(String.format("%02d:%02d", teamTimerMinutes[j], teamTimerSeconds[j]));
+                    teamTimers[j].setText(String.format("%02d:%02d", tempMins, tempSeconds));
                 }
 
             };
