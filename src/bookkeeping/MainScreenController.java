@@ -10,10 +10,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.KeyFrame;
@@ -222,7 +224,7 @@ public class MainScreenController extends Application {
             @Override
             public void handle(ActionEvent actionEvent) {
                 HashMap<String, ArrayList<Integer>> teamPlacements = new HashMap<>();
-                
+                List<ArrayList> allTheLists = new ArrayList<ArrayList>();
 
                 if(timeExpired == true){
                     
@@ -244,11 +246,18 @@ public class MainScreenController extends Application {
                                 
                             }
                         }
-                        if(problemsCounter > mostProblems){
-                            mostProblems = problemsCounter;
-
-                        }
+                        
+                        allTheLists.add(teamPlacements.get(teams.toString()));
                     }  
+                    
+                    
+                        Collections.sort(allTheLists, new Comparator<ArrayList>() {
+                            @Override
+                            public int compare(ArrayList a1, ArrayList a2) {
+                                return a2.size() - a1.size(); // assumes you want biggest to smallest
+                            }
+                        });
+                        System.out.println(allTheLists.toString());
                 }
             }
         });
