@@ -7,7 +7,12 @@ package bookkeeping;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,7 +29,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -44,9 +48,8 @@ public class MainScreenController extends Application {
     int teamsAmount = 0;
     int problemsAmount = 0;
     int buttonDeterminer = 0;
-    int buttonYValue = 42;
-    int labelYValue = 46;
-    int timerYValue = 46;
+    int buttonYValue = 50;
+    int timerYValue = 50;
     
     //ArrayList<Label> tt= new ArrayList<Label>();
     
@@ -73,10 +76,7 @@ public class MainScreenController extends Application {
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        //info();
 
-        //Create Edit button
-        StartScreenController start = new StartScreenController();
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("StartScreen.fxml"));
             Parent root1 = (Parent) fxmlLoader.load();
@@ -99,7 +99,7 @@ public class MainScreenController extends Application {
         System.out.println("Closed!");
     }
     
-    public void mainScreen(int teamNumbers, int totalTime, int problemAmount) {
+    public void mainScreen(Integer teamNumbers, Integer totalTime, Integer problemAmount) {
     //Initialize local variables to function call
         teamsAmount = teamNumbers;
         problemsAmount = problemAmount;
@@ -109,7 +109,8 @@ public class MainScreenController extends Application {
         buttons = new Button[teamsAmount];
         teamTimerSeconds = new int[teamsAmount];
         
-        minutesLeft = totalTime-1;
+        int tempTime = totalTime;
+        minutesLeft = tempTime-=1;
         secondsLeft = 60;
 
 
@@ -132,8 +133,6 @@ public class MainScreenController extends Application {
         //Initialize Map storing individual problem timers and set all to true
         
         
-
-        //startStage.close();
         Pane root = new Pane();
         Scene scene = new Scene(root, 1024, 768);
 
@@ -151,14 +150,12 @@ public class MainScreenController extends Application {
         timeLeftTimerLabel.setLayoutY(20);
         root.getChildren().add(timeLeftTimerLabel);
         
-
         //Initialize start button
         Button startButton = new Button();
         startButton.setText("Start All");
         startButton.setLayoutX(439);
         startButton.setLayoutY(19);
         root.getChildren().add(startButton);
-
         startButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -214,6 +211,49 @@ public class MainScreenController extends Application {
             }
         });
 
+        //Initialize Calculate outcome button
+        Button outcomeButton = new Button();
+        outcomeButton.setText("Calculate results");
+        outcomeButton.setLayoutX(800);
+        outcomeButton.setLayoutY(19);
+        root.getChildren().add(outcomeButton);
+        outcomeButton.setTextFill(Color.CRIMSON);
+        outcomeButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                HashMap<String, ArrayList<Integer>> teamPlacements = new HashMap<>();
+                
+
+                if(timeExpired == true){
+                    
+                    int mostProblems = 0;
+                    
+                    for(Integer teams = 0; teams < teamNumbers; teams ++){
+                        teamPlacements.put(teams.toString(), new ArrayList<>());
+                        
+                        int problemsCounter = 0;
+                        
+                        for(Integer problems = 0; problems < problemAmount; problems ++){
+                            
+                            if (teamProblemsStatus.get(teams.toString()).get(problems).equals("TRUE")) {
+                                
+                                teamPlacements.get(teams.toString()).add(teamProblemSeconds.get(teams.toString()).get(problems));
+                                
+                                
+                                problemsCounter++;
+                                
+                            }
+                        }
+                        if(problemsCounter > mostProblems){
+                            mostProblems = problemsCounter;
+
+                        }
+                    }  
+                }
+            }
+        });
+        
+        //for loop that runs for as many teams as there are to generate buttons for the team overview page
         for (Integer teamTimerFOR = 0; teamTimerFOR < teamsAmount; teamTimerFOR++) {
             int tempTeamNum = teamTimerFOR + 1;
             //variable to refference i, since refference variable here must be final
@@ -228,18 +268,18 @@ public class MainScreenController extends Application {
             teamTimers[teamTimerFOR].setText("Waiting to start");
             
             
-            if (teamTimerFOR < 25) {
+            if (teamTimerFOR < 24) {
                 teamTimers[teamTimerFOR].setLayoutX(100);
                 teamTimers[teamTimerFOR].setLayoutY(timerYValue);
             }
             
-            else if(teamTimerFOR == 25){
-                timerYValue = 46;
+            else if(teamTimerFOR == 24){
                 teamTimers[teamTimerFOR].setLayoutX(100);
                 teamTimers[teamTimerFOR].setLayoutY(timerYValue);
+                timerYValue = 32;
             }
             
-            else if(teamTimerFOR > 25){
+            else if(teamTimerFOR > 24){
                 teamTimers[teamTimerFOR].setLayoutX(500);
                 teamTimers[teamTimerFOR].setLayoutY(timerYValue);
             }
@@ -426,33 +466,48 @@ public class MainScreenController extends Application {
             });
 
             
-            if (teamTimerFOR < 25) {
+            if (teamTimerFOR < 24) {
                 buttons[teamTimerFOR].setLayoutX(14);
                 buttons[teamTimerFOR].setLayoutY(buttonYValue);
             }
             
-            else if(teamTimerFOR == 25){
+            else if(teamTimerFOR == 24){
                 buttons[teamTimerFOR].setLayoutX(14);
                 buttons[teamTimerFOR].setLayoutY(buttonYValue);
-                buttonYValue = 42;
+                buttonYValue = 32;
             }
             
-            else if(teamTimerFOR > 25){
+            else if(teamTimerFOR > 24){
                 buttons[teamTimerFOR].setLayoutX(415);
                 buttons[teamTimerFOR].setLayoutY(buttonYValue);
             }
             
 
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             //Add Children elements for each team to the pane
             root.getChildren().add(buttons[teamTimerFOR]);
             root.getChildren().add(teamTimers[teamTimerFOR]);
             
+            //Y value increments each FOR Loop run
             buttonYValue += 27;
-            labelYValue += 27;
             timerYValue += 27;
 
-            System.out.println("Initialized! " + teamTimerFOR);
-
+            
+            //Timer eventHndler, handles main timer and individual team problem timers
             eventHandler = e -> {
                 seconds++;
                 if (seconds == 60) {
@@ -463,7 +518,7 @@ public class MainScreenController extends Application {
                 secondsLeft--;
                 if(secondsLeft == 0){
                     minutesLeft--;
-                    secondsLeft = 60;
+                    secondsLeft = 59;
                 }
                 
                     if (minutes == totalTime) {
@@ -507,14 +562,35 @@ public class MainScreenController extends Application {
 
         primaryStage.setTitle("BOOKKEEPER 3000");
         primaryStage.setScene(scene);
+        //primaryStage.getIcons().add(new Image("/src/plat.png")); 
         primaryStage.show();
     }
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
         launch(args);
+    }
+    
+    
+    
+    public static <K, V extends Comparable<? super V>> Map<K, V> 
+        sortByValue( Map<K, V> map )
+    {
+        List<Map.Entry<K, V>> list =
+            new LinkedList<Map.Entry<K, V>>( map.entrySet() );
+        Collections.sort( list, new Comparator<Map.Entry<K, V>>()
+        {
+            public int compare( Map.Entry<K, V> o1, Map.Entry<K, V> o2 )
+            {
+                return (o1.getValue()).compareTo( o2.getValue() );
+            }
+        } );
+
+        Map<K, V> result = new LinkedHashMap<K, V>();
+        for (Map.Entry<K, V> entry : list)
+        {
+            result.put( entry.getKey(), entry.getValue() );
+        }
+        return result;
     }
 
 }

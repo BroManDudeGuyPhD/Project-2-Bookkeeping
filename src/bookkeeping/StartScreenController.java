@@ -23,39 +23,41 @@ import javafx.scene.control.TextField;
  */
 public class StartScreenController implements Initializable {
 
-   @FXML
+    @FXML
     private Label label;
     @FXML
     private Button button;
     @FXML
-    private TextField teams,times,probs;
-    @FXML
-    private int numTeam,maxTime,numProbs;
-    @FXML
-    public String stringTeam,stringProb,stringTime;
+    private TextField teams, times, probs;
+
+    private int numTeam, maxTime, numProbs;
+
+    public String stringTeam, stringProb, stringTime;
 
     ArrayList info = new ArrayList();
-    
+
     MainScreenController mainC = new MainScreenController();
-    
-    
+
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        stringTeam=teams.getText();
-        stringTime=times.getText();
-        stringProb=probs.getText();
+        stringTeam = teams.getText();
+        stringTime = times.getText();
+        stringProb = probs.getText();
 
-        if(isInteger(stringTeam)&& isInteger(stringTime) && isInteger(stringProb)){
+        if (isInteger(stringTeam) && isInteger(stringTime) && isInteger(stringProb)) {
 
-            mainC.mainScreen(Integer.parseInt(stringTeam),Integer.parseInt(stringTime),Integer.parseInt(stringProb));
-            mainC.closeEdit();
+            if (Integer.parseInt(stringTeam) < 51) {
+                if (Integer.parseInt(stringTime) < 181) {
+                    if (Integer.parseInt(stringProb) < 11) {
+                        mainC.mainScreen(Integer.parseInt(stringTeam), Integer.parseInt(stringTime), Integer.parseInt(stringProb));
+                        mainC.closeEdit();
+                    }
+                }
+            }
+
         }
     }
-    
-    public String getTeams(){
-        return stringTeam;
-    }
-    
+
     public static boolean isInteger(String s) {
         boolean isValidInteger = false;
         try {
@@ -69,12 +71,10 @@ public class StartScreenController implements Initializable {
 
         return isValidInteger;
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
-    
+    }
 
-    
 }
