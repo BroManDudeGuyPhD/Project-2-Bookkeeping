@@ -36,6 +36,7 @@ public class MainScreenController extends Application {
     
     boolean timerOn = false;
     boolean timerPaused = true;
+    boolean timeExpired = false;
     int seconds = 0;
     int minutes = 0;
     int teamsAmount = 0;
@@ -57,6 +58,7 @@ public class MainScreenController extends Application {
     HashMap<String, ArrayList<Integer>> teamProblemSeconds = new HashMap<>();
     HashMap<String, ArrayList<String>> teamProblemsStatus = new HashMap<>();
     HashMap<String, ArrayList<String>> teamProblemsCompletionTimes = new HashMap<>();
+    ArrayList<String> tesm = new ArrayList<>();
     
     public Stage startStage = new Stage();
     public Stage primaryStage = new Stage();
@@ -200,38 +202,38 @@ public class MainScreenController extends Application {
             }
         });
 
-        for (Integer i = 0; i < teamsAmount; i++) {
-            int tempTeamNum = i + 1;
+        for (Integer teamTimerFOR = 0; teamTimerFOR < teamsAmount; teamTimerFOR++) {
+            int tempTeamNum = teamTimerFOR + 1;
             //variable to refference i, since refference variable here must be final
-            final Integer q = i;
-            teamTimerSeconds[i] = 0;
+            final Integer teamTimerFORRefference = teamTimerFOR;
+            teamTimerSeconds[teamTimerFOR] = 0;
 
             //Initialize boolean arrays for teamTimers logic (starts at false)
 
 
             //Initialize team timers
-            teamTimers[i] = new Label();
-            teamTimers[i].setText("00:00");
-            teamTimers[i].setLayoutX(100);
-            teamTimers[i].setLayoutY(timerYValue);
+            teamTimers[teamTimerFOR] = new Label();
+            teamTimers[teamTimerFOR].setText("00:00");
+            teamTimers[teamTimerFOR].setLayoutX(100);
+            teamTimers[teamTimerFOR].setLayoutY(timerYValue);
             
            
             
             //Initialize buttons to control team timers
-            buttons[i].setText("Team "+tempTeamNum);
-            buttons[i].setOnAction(new EventHandler<ActionEvent>() {
+            buttons[teamTimerFOR].setText("Team "+tempTeamNum);
+            buttons[teamTimerFOR].setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
 
                     //Initialize team popup
-                    buttonDeterminer = q;
+                    buttonDeterminer = teamTimerFORRefference;
                     teamPopup.close();
                     Pane root = new Pane();
                     Scene scene = new Scene(root, 500, 300);
                     teamPopup.setTitle("Team "+buttonDeterminer);
 
 
-                    //Vanity Labels
+                    //Key Labels
                     Label key = new Label();
                     key.setLayoutX(112);
                     key.setLayoutY(14);
@@ -257,83 +259,95 @@ public class MainScreenController extends Application {
                     int problemButtonXLayout = 5;
                     int problemCBXLayout = 1;
                     
-                    for(int b = 0; b < problemAmount; b++){
+                    for(int problemButtonFOR = 0; problemButtonFOR < problemAmount; problemButtonFOR++){
                         
                         
-                        if(b < 4){
-                            problemButton[b].setLayoutY(89);
-                            problemButton[b].setLayoutX(problemButtonXLayout);
+                        if(problemButtonFOR < 4){
+                            problemButton[problemButtonFOR].setLayoutY(89);
+                            problemButton[problemButtonFOR].setLayoutX(problemButtonXLayout);
                             problemButtonXLayout += 100;
 
-                            problemStatus[b].setLayoutY(125);
-                            problemStatus[b].setLayoutX(problemCBXLayout);
+                            problemStatus[problemButtonFOR].setLayoutY(125);
+                            problemStatus[problemButtonFOR].setLayoutX(problemCBXLayout);
                             problemCBXLayout+=100;
                         }
                         
-                        else if(b == 4){
-                            problemButton[b].setLayoutY(89);
-                            problemButton[b].setLayoutX(problemButtonXLayout);
+                        else if(problemButtonFOR == 4){
+                            problemButton[problemButtonFOR].setLayoutY(89);
+                            problemButton[problemButtonFOR].setLayoutX(problemButtonXLayout);
                             problemButtonXLayout = 5;
 
-                            problemStatus[b].setLayoutY(125);
-                            problemStatus[b].setLayoutX(problemCBXLayout);
+                            problemStatus[problemButtonFOR].setLayoutY(125);
+                            problemStatus[problemButtonFOR].setLayoutX(problemCBXLayout);
                             problemCBXLayout = 1;
                         }
 
                         
-                        else if(b > 4){
+                        else if(problemButtonFOR > 4){
                             
-                            problemButton[b].setLayoutY(185);
-                            problemButton[b].setLayoutX(problemButtonXLayout);
+                            problemButton[problemButtonFOR].setLayoutY(185);
+                            problemButton[problemButtonFOR].setLayoutX(problemButtonXLayout);
                             problemButtonXLayout += 100;
     
-                            problemStatus[b].setLayoutY(216);
-                            problemStatus[b].setLayoutX(problemCBXLayout);
+                            problemStatus[problemButtonFOR].setLayoutY(216);
+                            problemStatus[problemButtonFOR].setLayoutX(problemCBXLayout);
                             problemCBXLayout+=100;
                         }
                         
-                        int temp = b;
+                        int temp = problemButtonFOR;
                         temp = temp + 1;
                         
                         
-                        problemButton[b].setText("Problem " + temp);
-                        problemButton[b].setTextFill(Color.GREEN);
-                                    
-                        problemStatus[b].setText("Completed");
-                        problemStatus[b].setSelected(false);
                         
                         
-                        if (teamProblemsStatus.get(q.toString()).get(b).equals("TRUE")) {
-                            problemButton[b].setText("Completed");
-                            problemButton[b].setTextFill(Color.RED);
+                        //Check problem status to determine if solved. Shows Red button text and checks box if so
+                        if (teamProblemsStatus.get(teamTimerFORRefference.toString()).get(problemButtonFOR).equals("TRUE")) {
+                            problemButton[problemButtonFOR].setText("Completed");
+                            problemButton[problemButtonFOR].setTextFill(Color.RED);
 
-                            problemStatus[b].setText("Completed");
-                            problemStatus[b].setSelected(true);
+                            problemStatus[problemButtonFOR].setText("Completed");
+                            problemStatus[problemButtonFOR].setSelected(true);
                         }
                         
-                        root.getChildren().add(problemButton[b]);
-                        root.getChildren().add( problemStatus[b]);
+                        //Check problem timer status to determine if paused. If paused then button text is blue.
+                        else if(teamProblemTimers.get(teamTimerFORRefference.toString()).get(problemButtonFOR).equals("FALSE")){
+                            problemButton[problemButtonFOR].setText("Resume");
+                            problemButton[problemButtonFOR].setTextFill(Color.BLUE);
+                        }
+                        
+                        else {
+                            problemButton[problemButtonFOR].setText("Problem " + temp);
+                            problemButton[problemButtonFOR].setTextFill(Color.GREEN);
+
+                            problemStatus[problemButtonFOR].setText("Completed");
+                            problemStatus[problemButtonFOR].setSelected(false);
+                        }
+                        
+                        
+                        
+                        root.getChildren().add(problemButton[problemButtonFOR]);
+                        root.getChildren().add( problemStatus[problemButtonFOR]);
                         
                         
                         final int tempTemp = temp;
-                        final int c = b;
-                        problemButton[b].setOnAction(new EventHandler<ActionEvent>() {
+                        final int c = problemButtonFOR;
+                        problemButton[problemButtonFOR].setOnAction(new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent actionEvent) {
-                                teamTimers[q].setTextFill(Color.RED);
+                                teamTimers[teamTimerFORRefference].setTextFill(Color.RED);
                                 
 
-                                if (teamProblemTimers.get(q.toString()).get(q).equals("FALSE")) {
+                                if (teamProblemTimers.get(teamTimerFORRefference.toString()).get(c).equals("FALSE")) {
                                     problemButton[c].setTextFill(Color.GREEN);
                                     problemButton[c].setText("Problem "+tempTemp);
-                                    teamProblemTimers.get(q.toString()).set(q,"TRUE");  
+                                    teamProblemTimers.get(teamTimerFORRefference.toString()).set(c,"TRUE");  
                                 } 
                                 
-                                else if (teamProblemTimers.get(q.toString()).get(q).equals("TRUE")) {
+                                else if (teamProblemTimers.get(teamTimerFORRefference.toString()).get(c).equals("TRUE") && timeExpired == false) {
                                     problemButton[c].setTextFill(Color.BLUE);
                                     problemButton[c].setText("Resume");
-                                    System.out.println("Team: "+q+ " Problem " +tempTemp+" paused at: "+teamProblemSeconds.get(q.toString()).get(c));
-                                    teamProblemTimers.get(q.toString()).set(q,"FALSE");
+                                    System.out.println("Team: "+teamTimerFORRefference+ " Problem " +tempTemp+" PAUSED at: "+teamProblemSeconds.get(teamTimerFORRefference.toString()).get(c));
+                                    teamProblemTimers.get(teamTimerFORRefference.toString()).set(c,"FALSE");
                                 }
 
                             }
@@ -342,16 +356,17 @@ public class MainScreenController extends Application {
                         
                         
                             
-                        problemStatus[b].setOnAction(new EventHandler<ActionEvent>() {
+                        problemStatus[c].setOnAction(new EventHandler<ActionEvent>() {
 
                             @Override
                             public void handle(ActionEvent actionEvent) {
                                 
-                                if(teamProblemTimers.get(q.toString()).get(q).equals("FALSE")){
+                                if(teamProblemTimers.get(teamTimerFORRefference.toString()).get(c).equals("FALSE")){
                                     problemButton[c].setText("Completed");
                                     problemButton[c].setTextFill(Color.RED);
-                                    teamProblemsStatus.get(q.toString()).set(c, "TRUE");
+                                    teamProblemsStatus.get(teamTimerFORRefference.toString()).set(c, "TRUE");
                                     
+                                    System.out.println("Team: "+teamTimerFORRefference+ " Problem " +tempTemp+" SOLVED at: "+teamProblemSeconds.get(teamTimerFORRefference.toString()).get(c));
                                 }
                                 
                             }
@@ -375,18 +390,18 @@ public class MainScreenController extends Application {
                 
             });
 
-            buttons[i].setLayoutX(14);
-            buttons[i].setLayoutY(buttonYValue);
+            buttons[teamTimerFOR].setLayoutX(14);
+            buttons[teamTimerFOR].setLayoutY(buttonYValue);
 
             //Add Children elements for each team to the pane
-            root.getChildren().add(buttons[i]);
-            root.getChildren().add(teamTimers[i]);
+            root.getChildren().add(buttons[teamTimerFOR]);
+            root.getChildren().add(teamTimers[teamTimerFOR]);
             
             buttonYValue += 27;
             labelYValue += 27;
             timerYValue += 27;
 
-            System.out.println("Initialized! " + i);
+            System.out.println("Initialized! " + teamTimerFOR);
 
             eventHandler = e -> {
                 seconds++;
@@ -394,7 +409,15 @@ public class MainScreenController extends Application {
                     minutes++;
                     seconds = 0;
                 }
+                
+                if(minutes == totalTime){
+                    mainTimerLabel.setText("Time Expired!");
+                    mainTimerLabel.setTextFill(Color.RED);
+                    timer.pause();
+                    timeExpired = true;
+                }
 
+                else if(minutes != totalTime){
                 mainTimerLabel.setText(String.format("%02d:%02d", minutes, seconds));
 
                 for (Integer teams = 0; teams < teamsAmount; teams++) {
@@ -417,6 +440,7 @@ public class MainScreenController extends Application {
                         
 
                     //teamTimers[j].setText(String.format("%02d:%02d", tempMins, tempSeconds));
+                }
                 }
                 }
 
