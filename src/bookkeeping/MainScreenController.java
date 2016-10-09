@@ -161,8 +161,8 @@ public class MainScreenController extends Application {
                     mainTimerLabel.setTextFill(Color.GREEN);
 
                     for (Integer teams = 0; teams < teamsAmount; teams++) {
-                        System.out.println("Team " + teams + " set to true");
-                        //buttons[q].setText("Pause");
+                        teamTimers[teams].setText("Working");
+                        teamTimers[teams].setTextFill(Color.GREEN);
                         
                         teamProblemTimers.put(teams.toString(), new ArrayList<>());
                         teamProblemSeconds.put(teams.toString(), new ArrayList<>());
@@ -213,10 +213,24 @@ public class MainScreenController extends Application {
 
             //Initialize team timers
             teamTimers[teamTimerFOR] = new Label();
-            teamTimers[teamTimerFOR].setText("00:00");
-            teamTimers[teamTimerFOR].setLayoutX(100);
-            teamTimers[teamTimerFOR].setLayoutY(timerYValue);
+            teamTimers[teamTimerFOR].setText("Waiting to start");
             
+            
+            if (teamTimerFOR < 25) {
+                teamTimers[teamTimerFOR].setLayoutX(100);
+                teamTimers[teamTimerFOR].setLayoutY(timerYValue);
+            }
+            
+            else if(teamTimerFOR == 25){
+                timerYValue = 46;
+                teamTimers[teamTimerFOR].setLayoutX(100);
+                teamTimers[teamTimerFOR].setLayoutY(timerYValue);
+            }
+            
+            else if(teamTimerFOR > 25){
+                teamTimers[teamTimerFOR].setLayoutX(500);
+                teamTimers[teamTimerFOR].setLayoutY(timerYValue);
+            }
            
             
             //Initialize buttons to control team timers
@@ -227,10 +241,12 @@ public class MainScreenController extends Application {
 
                     //Initialize team popup
                     buttonDeterminer = teamTimerFORRefference;
+                    int temp = teamTimerFORRefference;
+                    temp +=1;
                     teamPopup.close();
                     Pane root = new Pane();
                     Scene scene = new Scene(root, 500, 300);
-                    teamPopup.setTitle("Team "+buttonDeterminer);
+                    teamPopup.setTitle("Team "+temp);
 
 
                     //Key Labels
@@ -294,8 +310,8 @@ public class MainScreenController extends Application {
                             problemCBXLayout+=100;
                         }
                         
-                        int temp = problemButtonFOR;
-                        temp = temp + 1;
+                        int tempp = problemButtonFOR;
+                        tempp = tempp + 1;
                         
                         
                         
@@ -316,7 +332,7 @@ public class MainScreenController extends Application {
                         }
                         
                         else {
-                            problemButton[problemButtonFOR].setText("Problem " + temp);
+                            problemButton[problemButtonFOR].setText("Problem " + tempp);
                             problemButton[problemButtonFOR].setTextFill(Color.GREEN);
 
                             problemStatus[problemButtonFOR].setText("Completed");
@@ -329,7 +345,7 @@ public class MainScreenController extends Application {
                         root.getChildren().add( problemStatus[problemButtonFOR]);
                         
                         
-                        final int tempTemp = temp;
+                        final int tempTemp = tempp;
                         final int c = problemButtonFOR;
                         problemButton[problemButtonFOR].setOnAction(new EventHandler<ActionEvent>() {
                             @Override
@@ -341,13 +357,18 @@ public class MainScreenController extends Application {
                                     problemButton[c].setTextFill(Color.GREEN);
                                     problemButton[c].setText("Problem "+tempTemp);
                                     teamProblemTimers.get(teamTimerFORRefference.toString()).set(c,"TRUE");  
+                                    teamTimers[teamTimerFORRefference].setText("Working");
+                                    teamTimers[teamTimerFORRefference].setTextFill(Color.GREEN);
                                 } 
                                 
                                 else if (teamProblemTimers.get(teamTimerFORRefference.toString()).get(c).equals("TRUE") && timeExpired == false) {
                                     problemButton[c].setTextFill(Color.BLUE);
                                     problemButton[c].setText("Resume");
-                                    System.out.println("Team: "+teamTimerFORRefference+ " Problem " +tempTemp+" PAUSED at: "+teamProblemSeconds.get(teamTimerFORRefference.toString()).get(c));
                                     teamProblemTimers.get(teamTimerFORRefference.toString()).set(c,"FALSE");
+                                    teamTimers[teamTimerFORRefference].setText("Judging");
+                                    teamTimers[teamTimerFORRefference].setTextFill(Color.BLUE);
+                                    
+                                    System.out.println("Team: "+teamTimerFORRefference+ " Problem " +tempTemp+" PAUSED at: "+teamProblemSeconds.get(teamTimerFORRefference.toString()).get(c));
                                 }
 
                             }
@@ -365,6 +386,8 @@ public class MainScreenController extends Application {
                                     problemButton[c].setText("Completed");
                                     problemButton[c].setTextFill(Color.RED);
                                     teamProblemsStatus.get(teamTimerFORRefference.toString()).set(c, "TRUE");
+                                    teamTimers[teamTimerFORRefference].setText("Working");
+                                    teamTimers[teamTimerFORRefference].setTextFill(Color.GREEN);
                                     
                                     System.out.println("Team: "+teamTimerFORRefference+ " Problem " +tempTemp+" SOLVED at: "+teamProblemSeconds.get(teamTimerFORRefference.toString()).get(c));
                                 }
@@ -390,8 +413,23 @@ public class MainScreenController extends Application {
                 
             });
 
-            buttons[teamTimerFOR].setLayoutX(14);
-            buttons[teamTimerFOR].setLayoutY(buttonYValue);
+            
+            if (teamTimerFOR < 25) {
+                buttons[teamTimerFOR].setLayoutX(14);
+                buttons[teamTimerFOR].setLayoutY(buttonYValue);
+            }
+            
+            else if(teamTimerFOR == 25){
+                buttons[teamTimerFOR].setLayoutX(14);
+                buttons[teamTimerFOR].setLayoutY(buttonYValue);
+                buttonYValue = 42;
+            }
+            
+            else if(teamTimerFOR > 25){
+                buttons[teamTimerFOR].setLayoutX(415);
+                buttons[teamTimerFOR].setLayoutY(buttonYValue);
+            }
+            
 
             //Add Children elements for each team to the pane
             root.getChildren().add(buttons[teamTimerFOR]);
