@@ -39,6 +39,8 @@ public class MainScreenController extends Application {
     boolean timeExpired = false;
     int seconds = 0;
     int minutes = 0;
+    int secondsLeft = 0;
+    int minutesLeft = 0;
     int teamsAmount = 0;
     int problemsAmount = 0;
     int buttonDeterminer = 0;
@@ -107,7 +109,8 @@ public class MainScreenController extends Application {
         buttons = new Button[teamsAmount];
         teamTimerSeconds = new int[teamsAmount];
         
-        int totalTimer = totalTime;
+        minutesLeft = totalTime;
+        secondsLeft = 60;
 
 
     
@@ -140,6 +143,14 @@ public class MainScreenController extends Application {
         mainTimerLabel.setLayoutX(515);
         mainTimerLabel.setLayoutY(20);
         root.getChildren().add(mainTimerLabel);
+        
+        //Initialize timeLeft timer
+        Label timeLeftTimerLabel = new Label();
+        timeLeftTimerLabel.setText("00:00");
+        timeLeftTimerLabel.setLayoutX(615);
+        timeLeftTimerLabel.setLayoutY(20);
+        root.getChildren().add(timeLeftTimerLabel);
+        
 
         //Initialize start button
         Button startButton = new Button();
@@ -159,7 +170,8 @@ public class MainScreenController extends Application {
 
                     startButton.setText("Pause All");
                     mainTimerLabel.setTextFill(Color.GREEN);
-
+                    timeLeftTimerLabel.setTextFill(Color.RED);
+                    
                     for (Integer teams = 0; teams < teamsAmount; teams++) {
                         teamTimers[teams].setText("Working");
                         teamTimers[teams].setTextFill(Color.GREEN);
@@ -448,40 +460,43 @@ public class MainScreenController extends Application {
                     seconds = 0;
                 }
                 
-                if(minutes == totalTime){
-                    mainTimerLabel.setText("Time Expired!");
-                    mainTimerLabel.setTextFill(Color.RED);
-                    timer.pause();
-                    timeExpired = true;
+                secondsLeft--;
+                if(secondsLeft == 0){
+                    minutesLeft--;
+                    secondsLeft = 60;
                 }
-
-                else if(minutes != totalTime){
-                mainTimerLabel.setText(String.format("%02d:%02d", minutes, seconds));
-
-                for (Integer teams = 0; teams < teamsAmount; teams++) {
+                
+                    if (minutes == totalTime) {
+                        mainTimerLabel.setText("Time Expired!");
+                        mainTimerLabel.setTextFill(Color.RED);
+                        timer.pause();
+                        timeExpired = true;
+                    } 
                     
-                    for (Integer problems = 0; problems < problemsAmount; problems++) {
+                    else if (minutes != totalTime) {
+                        mainTimerLabel.setText(String.format("%02d:%02d", minutes, seconds));
+                        timeLeftTimerLabel.setText(String.format("%02d:%02d", minutesLeft, secondsLeft));
+                        for (Integer teams = 0; teams < teamsAmount; teams++) {
 
-                        if (teamProblemTimers.get(teams.toString()).get(problems).equals("TRUE")) {
-                            Integer tempSeconds = teamProblemSeconds.get(teams.toString()).get(problems);
-                            teamProblemSeconds.get(teams.toString()).set(problems, tempSeconds+=1);
+                            for (Integer problems = 0; problems < problemsAmount; problems++) {
 
+                                if (teamProblemTimers.get(teams.toString()).get(problems).equals("TRUE")) {
+                                    Integer tempSeconds = teamProblemSeconds.get(teams.toString()).get(problems);
+                                    teamProblemSeconds.get(teams.toString()).set(problems, tempSeconds += 1);
+
+                                }
+
+                                int tempMins = 0;
+                                int tempSeconds = teamProblemSeconds.get(teams.toString()).get(problems);
+
+                                while (tempSeconds >= 60) {
+                                    tempMins += 1;
+                                    tempSeconds -= 60;
+                                }
+
+                            }
                         }
-                    
-                        int tempMins = 0;
-                        int tempSeconds = teamProblemSeconds.get(teams.toString()).get(problems);
-                        
-                        while(tempSeconds >= 60){
-                            tempMins +=1;
-                            tempSeconds -= 60;
-                        }
-                        
-
-                    //teamTimers[j].setText(String.format("%02d:%02d", tempMins, tempSeconds));
-                }
-                }
-                }
-
+                    }
             };
 
             timer = new Timeline(
