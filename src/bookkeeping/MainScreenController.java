@@ -109,7 +109,7 @@ public class MainScreenController extends Application {
         buttons = new Button[teamsAmount];
         teamTimerSeconds = new int[teamsAmount];
         
-        minutesLeft = totalTime;
+        minutesLeft = totalTime-1;
         secondsLeft = 60;
 
 
