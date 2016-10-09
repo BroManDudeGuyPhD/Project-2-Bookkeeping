@@ -251,7 +251,7 @@ public class MainScreenController extends Application {
                     }  
                     
                     
-                        Collections.sort(allTheLists, new Comparator<ArrayList>() {
+                        Collections.sort(allTheLists, new Comparator<ArrayList>() { 
                             @Override
                             public int compare(ArrayList a1, ArrayList a2) {
                                 return a2.size() - a1.size(); // assumes you want biggest to smallest
