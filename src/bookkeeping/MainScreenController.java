@@ -224,10 +224,10 @@ public class MainScreenController extends Application {
             @Override
             public void handle(ActionEvent actionEvent) {
                 
+                if(timeExpired == true){
                 //Only runs if time is expired
                     HashMap<String, ArrayList<Integer>> teamPlacements = new HashMap<>();
                     List<ArrayList> allTheLists = new ArrayList<>();
-                    List<ArrayList> allTheTeams = new ArrayList<>();
 
                     int mostProblems = 0;
 
@@ -245,43 +245,64 @@ public class MainScreenController extends Application {
                             }
                         }
 
-                        allTheLists.add(teamPlacements.get(teams.toString()));
+                        if(!teamPlacements.get(teams.toString()).isEmpty())
+                            allTheLists.add(teamPlacements.get(teams.toString()));
 
                     }
 
                     Collections.sort(allTheLists, new Comparator<ArrayList>() {
                         @Override
                         public int compare(ArrayList a1, ArrayList a2) {
-                            return a2.size() - a1.size(); // assumes you want biggest to smallest
+                            return a2.size() - a1.size(); //assumes biggest to smallest
                         }
                     });
-
-
                     
-                    ArrayList<String> results = new ArrayList<>();
-                    
-                    for (Integer c = 0; c < allTheLists.size(); c++) {
-                        String tempList = allTheLists.get(c).toString();
+                  ArrayList<String> results = new ArrayList<>();
+                for (Integer c = 0; c < allTheLists.size(); c++) {
+                    String tempList = allTheLists.get(c).toString();
 
-                            if (teamPlacements.get(c.toString()).toString().contains(tempList)) {
-                                int temp = c;
-                                temp += 1;
-                                
-                                if(allTheLists.get(c).size() > mostProblems){
-                                    results.add(0, "Team: "+temp + " Completed: " + allTheLists.get(c).size());
-                                    mostProblems = allTheLists.get(c).size();
-                                    System.out.println(allTheLists.get(c).size());
-                                }
-                                
-                                else
-                                    results.add("Team: "+temp + " Completed: " + allTheLists.get(c).size());
-                                
-                                
+                    for (Integer teams = 0; teams < teamNumbers; teams++) {
+                        if (teamPlacements.get(teams.toString()).toString().contains(tempList)) {
+                            int temp = teams;
+                            temp += 1;
+                            if (allTheLists.get(c).size() > mostProblems) {
+                                results.add(0, "Team: " + temp + " Completed: " + allTheLists.get(c).size()+"\n");
+                                mostProblems = allTheLists.get(c).size();
+                                System.out.println(allTheLists.get(c).size());
+                            } 
+                            
+                            
+                            
+                            else if (allTheLists.get(c).size() < mostProblems) {
+                                results.add("Team: " + temp + " Completed: " + allTheLists.get(c).size()+"\n");
                             }
-                        
-                    
+
+//                                    printer.print("Team: " + temp);
+//                                    printer.println("Completed: " + allTheLists.get(teams).size());
+                        }
+                    }
                 }
-                    System.out.println(results);
+                
+
+                    String fileName = "results.txt";
+                    
+                    java.io.File outFile=new java.io.File(fileName);
+                    if(outFile.exists()){
+                        java.io.PrintWriter printer;
+                        try{
+                            printer=new java.io.PrintWriter(outFile);
+                        }catch (Exception e){
+                            System.out.println("IOException error: "+e);
+                            return;
+                        }
+                        
+                        for(int i = 0; i < results.size(); i++){
+                            printer.println(results.get(i));
+                        }
+                        
+                    printer.close();
+                    }
+                }
             }
         });
 
