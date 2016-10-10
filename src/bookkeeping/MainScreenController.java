@@ -223,61 +223,62 @@ public class MainScreenController extends Application {
         outcomeButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                HashMap<String, ArrayList<Integer>> teamPlacements = new HashMap<>();
-                List<ArrayList> allTheLists = new ArrayList<>();
-                List<ArrayList> allTheTeams = new ArrayList<>();
                 
-                    
+                //Only runs if time is expired
+                if (timeExpired == true) {
+                    HashMap<String, ArrayList<Integer>> teamPlacements = new HashMap<>();
+                    List<ArrayList> allTheLists = new ArrayList<>();
+                    List<ArrayList> allTheTeams = new ArrayList<>();
+
                     int mostProblems = 0;
-                    
-                    for(Integer teams = 0; teams < teamNumbers; teams ++){
+
+                    for (Integer teams = 0; teams < teamNumbers; teams++) {
                         teamPlacements.put(teams.toString(), new ArrayList<>());
-                        
+
                         int problemsCounter = 0;
-                        
-                        for(Integer problems = 0; problems < problemAmount; problems ++){
-                            
+
+                        for (Integer problems = 0; problems < problemAmount; problems++) {
+
                             if (teamProblemsStatus.get(teams.toString()).get(problems).equals("TRUE")) {
-                                
+
                                 teamPlacements.get(teams.toString()).add(teamProblemSeconds.get(teams.toString()).get(problems));
-                                
-                                
+
                                 problemsCounter++;
-                                
+
                             }
                         }
-                        
+
                         allTheLists.add(teamPlacements.get(teams.toString()));
-                        
-                    }  
-                    
-                    
-                        Collections.sort(allTheLists, new Comparator<ArrayList>() { 
-                            @Override
-                            public int compare(ArrayList a1, ArrayList a2) {
-                                return a2.size() - a1.size(); // assumes you want biggest to smallest
-                            }
-                        });
-                        System.out.println("Tests: ");
-                        System.out.println("Completed: "+allTheLists.get(0));
-                        
-                        
-                        
-                        System.out.println("Non test output:");
-                        
-                        for(Integer teams = 0; teams < teamNumbers; teams ++){
-                            if(teamPlacements.get(teams.toString()).toString().contains(allTheLists.get(teams).toString())){
-                                int temp = teams;
-                                temp +=1;
-                                System.out.print("Team: "+temp);
-                                System.out.println("Completed: "+allTheLists.get(teams));
-                            }
-                            
+
+                    }
+
+                    Collections.sort(allTheLists, new Comparator<ArrayList>() {
+                        @Override
+                        public int compare(ArrayList a1, ArrayList a2) {
+                            return a2.size() - a1.size(); // assumes you want biggest to smallest
                         }
-                
+                    });
+                    System.out.println("Tests: ");
+                    System.out.println("Completed: " + allTheLists.get(0));
+
+                    System.out.println("Non test output:");
+
+                    for (Integer c = 0; c < allTheLists.size(); c++) {
+                        String tempList = allTheLists.get(c).toString();
+
+                        for (Integer teams = 0; teams < teamNumbers; teams++) {
+                            if (teamPlacements.get(teams.toString()).toString().contains(tempList)) {
+                                int temp = c;
+                                temp += 1;
+                                System.out.print("Team: " + temp);
+                                System.out.println("Completed: " + allTheLists.get(teams).size());
+                            }
+                        }
+                    }
+                }
             }
         });
-        
+
         //for loop that runs for as many teams as there are to generate buttons for the team overview page
         for (Integer teamTimerFOR = 0; teamTimerFOR < teamsAmount; teamTimerFOR++) {
             int tempTeamNum = teamTimerFOR + 1;
@@ -512,26 +513,14 @@ public class MainScreenController extends Application {
             
             
             
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
             //Add Children elements for each team to the pane
             root.getChildren().add(buttons[teamTimerFOR]);
             root.getChildren().add(teamTimers[teamTimerFOR]);
-            
+
             //Y value increments each FOR Loop run
             buttonYValue += 27;
             timerYValue += 27;
 
-            
             //Timer eventHndler, handles main timer and individual team problem timers
             eventHandler = e -> {
                 seconds++;
@@ -539,44 +528,42 @@ public class MainScreenController extends Application {
                     minutes++;
                     seconds = 0;
                 }
-                
+
                 secondsLeft--;
-                if(secondsLeft == 0){
+                if (secondsLeft == 0) {
                     minutesLeft--;
                     secondsLeft = 59;
                 }
-                
-                    if (minutes == totalTime) {
-                        mainTimerLabel.setText("Time Expired!");
-                        mainTimerLabel.setTextFill(Color.RED);
-                        timer.pause();
-                        timeExpired = true;
-                    } 
-                    
-                    else if (minutes != totalTime) {
-                        mainTimerLabel.setText(String.format("%02d:%02d", minutes, seconds));
-                        timeLeftTimerLabel.setText(String.format("%02d:%02d", minutesLeft, secondsLeft));
-                        for (Integer teams = 0; teams < teamsAmount; teams++) {
 
-                            for (Integer problems = 0; problems < problemsAmount; problems++) {
+                if (minutes == totalTime) {
+                    mainTimerLabel.setText("Time Expired!");
+                    mainTimerLabel.setTextFill(Color.RED);
+                    timer.pause();
+                    timeExpired = true;
+                } else if (minutes != totalTime) {
+                    mainTimerLabel.setText(String.format("%02d:%02d", minutes, seconds));
+                    timeLeftTimerLabel.setText(String.format("%02d:%02d", minutesLeft, secondsLeft));
+                    for (Integer teams = 0; teams < teamsAmount; teams++) {
 
-                                if (teamProblemTimers.get(teams.toString()).get(problems).equals("TRUE")) {
-                                    Integer tempSeconds = teamProblemSeconds.get(teams.toString()).get(problems);
-                                    teamProblemSeconds.get(teams.toString()).set(problems, tempSeconds += 1);
+                        for (Integer problems = 0; problems < problemsAmount; problems++) {
 
-                                }
-
-                                int tempMins = 0;
-                                int tempSeconds = teamProblemSeconds.get(teams.toString()).get(problems);
-
-                                while (tempSeconds >= 60) {
-                                    tempMins += 1;
-                                    tempSeconds -= 60;
-                                }
+                            if (teamProblemTimers.get(teams.toString()).get(problems).equals("TRUE")) {
+                                Integer tempSeconds = teamProblemSeconds.get(teams.toString()).get(problems);
+                                teamProblemSeconds.get(teams.toString()).set(problems, tempSeconds += 1);
 
                             }
+
+                            int tempMins = 0;
+                            int tempSeconds = teamProblemSeconds.get(teams.toString()).get(problems);
+
+                            while (tempSeconds >= 60) {
+                                tempMins += 1;
+                                tempSeconds -= 60;
+                            }
+
                         }
                     }
+                }
             };
 
             timer = new Timeline(
@@ -587,35 +574,12 @@ public class MainScreenController extends Application {
 
         primaryStage.setTitle("BOOKKEEPER 3000");
         primaryStage.setScene(scene);
-        //primaryStage.getIcons().add(new Image("/src/plat.png")); 
         primaryStage.show();
     }
 
     public static void main(String[] args) {
         launch(args);
     }
-    
-    
-    
-    public static <K, V extends Comparable<? super V>> Map<K, V> 
-        sortByValue( Map<K, V> map )
-    {
-        List<Map.Entry<K, V>> list =
-            new LinkedList<Map.Entry<K, V>>( map.entrySet() );
-        Collections.sort( list, new Comparator<Map.Entry<K, V>>()
-        {
-            public int compare( Map.Entry<K, V> o1, Map.Entry<K, V> o2 )
-            {
-                return (o1.getValue()).compareTo( o2.getValue() );
-            }
-        } );
 
-        Map<K, V> result = new LinkedHashMap<K, V>();
-        for (Map.Entry<K, V> entry : list)
-        {
-            result.put( entry.getKey(), entry.getValue() );
-        }
-        return result;
-    }
 
 }
