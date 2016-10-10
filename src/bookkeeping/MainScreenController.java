@@ -225,7 +225,6 @@ public class MainScreenController extends Application {
             public void handle(ActionEvent actionEvent) {
                 
                 //Only runs if time is expired
-                if (timeExpired == true) {
                     HashMap<String, ArrayList<Integer>> teamPlacements = new HashMap<>();
                     List<ArrayList> allTheLists = new ArrayList<>();
                     List<ArrayList> allTheTeams = new ArrayList<>();
@@ -243,8 +242,6 @@ public class MainScreenController extends Application {
 
                                 teamPlacements.get(teams.toString()).add(teamProblemSeconds.get(teams.toString()).get(problems));
 
-                                problemsCounter++;
-
                             }
                         }
 
@@ -258,24 +255,33 @@ public class MainScreenController extends Application {
                             return a2.size() - a1.size(); // assumes you want biggest to smallest
                         }
                     });
-                    System.out.println("Tests: ");
-                    System.out.println("Completed: " + allTheLists.get(0));
 
-                    System.out.println("Non test output:");
 
+                    
+                    ArrayList<String> results = new ArrayList<>();
+                    
                     for (Integer c = 0; c < allTheLists.size(); c++) {
                         String tempList = allTheLists.get(c).toString();
 
-                        for (Integer teams = 0; teams < teamNumbers; teams++) {
-                            if (teamPlacements.get(teams.toString()).toString().contains(tempList)) {
+                            if (teamPlacements.get(c.toString()).toString().contains(tempList)) {
                                 int temp = c;
                                 temp += 1;
-                                System.out.print("Team: " + temp);
-                                System.out.println("Completed: " + allTheLists.get(teams).size());
+                                
+                                if(allTheLists.get(c).size() > mostProblems){
+                                    results.add(0, "Team: "+temp + " Completed: " + allTheLists.get(c).size());
+                                    mostProblems = allTheLists.get(c).size();
+                                    System.out.println(allTheLists.get(c).size());
+                                }
+                                
+                                else
+                                    results.add("Team: "+temp + " Completed: " + allTheLists.get(c).size());
+                                
+                                
                             }
-                        }
-                    }
+                        
+                    
                 }
+                    System.out.println(results);
             }
         });
 
