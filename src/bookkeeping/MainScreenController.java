@@ -224,9 +224,9 @@ public class MainScreenController extends Application {
             @Override
             public void handle(ActionEvent actionEvent) {
                 HashMap<String, ArrayList<Integer>> teamPlacements = new HashMap<>();
-                List<ArrayList> allTheLists = new ArrayList<ArrayList>();
-
-                if(timeExpired == true){
+                List<ArrayList> allTheLists = new ArrayList<>();
+                List<ArrayList> allTheTeams = new ArrayList<>();
+                
                     
                     int mostProblems = 0;
                     
@@ -248,6 +248,7 @@ public class MainScreenController extends Application {
                         }
                         
                         allTheLists.add(teamPlacements.get(teams.toString()));
+                        
                     }  
                     
                     
@@ -257,8 +258,23 @@ public class MainScreenController extends Application {
                                 return a2.size() - a1.size(); // assumes you want biggest to smallest
                             }
                         });
-                        System.out.println(allTheLists.toString());
-                }
+                        System.out.println("Tests: ");
+                        System.out.println("Completed: "+allTheLists.get(0));
+                        
+                        
+                        
+                        System.out.println("Non test output:");
+                        
+                        for(Integer teams = 0; teams < teamNumbers; teams ++){
+                            if(teamPlacements.get(teams.toString()).toString().contains(allTheLists.get(teams).toString())){
+                                int temp = teams;
+                                temp +=1;
+                                System.out.print("Team: "+temp);
+                                System.out.println("Completed: "+allTheLists.get(teams));
+                            }
+                            
+                        }
+                
             }
         });
         
